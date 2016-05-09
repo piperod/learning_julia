@@ -1,5 +1,5 @@
 using Images, Colors, FixedPointNumbers, ImageView
-img=load("rose.png")
+img=load("Imagenes/rose.png")
 include("setup.jl")
 include("deltastep.jl")
 include("relax.jl")
@@ -11,6 +11,7 @@ push!(graph,[3,1,4])
 push!(graph,[3,4,2])
 push!(graph,[4,2,5])
 Delta=@time Deltastep(graph,2,1)
+
 graph=setup(img)
 
 f=open("output.txt","w")
@@ -19,4 +20,9 @@ Time=@elapsed Deltastep(graph,5000,i)
 Alloc=@allocated Deltastep(graph,5000,i)
 write(f,"  Deltastep : $i Time Elapsed $Time Memory Allocations : $Alloc \n")
 end
+
+img=load("rose.png")
+
+
+
 close(f)

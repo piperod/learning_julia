@@ -1,1 +1,5 @@
-Image size: (850416,) Deltastep : 10 Time Elapsed 22.420666343 Memory Allocations : 2083585367 Image size: (850416,) Deltastep : 50 Time Elapsed 32.403058282 Memory Allocations : 2605016711 Image size: (850416,) Deltastep : 100 Time Elapsed 51.774456062 Memory Allocations : 3160195575 Image size: (850416,) Deltastep : 500 Time Elapsed 133.444664487 Memory Allocations : 7693375111 Image size: (850416,) Deltastep : 1000 Time Elapsed 170.758221266 Memory Allocations : 11027072711 Image size: (850416,) Deltastep : 2000 Time Elapsed 175.668568802 Memory Allocations : 14661252519 
+  Deltastep : 10 Time Elapsed 38.850467408 Memory Allocations : 3639441358 
+  Deltastep : 50 Time Elapsed 36.71958839 Memory Allocations : 3715005870 
+  Deltastep : 100 Time Elapsed 35.419438405 Memory Allocations : 3789776366 
+  Deltastep : 500 Time Elapsed 38.582144094 Memory Allocations : 3700937454 
+  Deltastep : 1000 Time Elapsed 48.501962464 Memory Allocations : 3763078046 

@@ -1,6 +1,6 @@
 function relax(w,d,delta,B,tent,pred,v)
     # println("w : $w")
-
+    
     if d<tent[w]
         old_i=floor(tent[w]/delta)
         tent[w]=d

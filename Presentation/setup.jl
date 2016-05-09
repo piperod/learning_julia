@@ -1,23 +1,30 @@
-using Colors
+using Images, Colors, FixedPointNumbers, ImageView
 function setup(A)
-	node=Array{Int64}[]
+    
 	x,y = size(A)
 	list=Array{Float64}[]
-	A=convert(Image{Gray{Ufixed8}}, A)
+	img=convert(Image{Gray{Ufixed8}}, A)
+    xx,yy=imgradients(img)
+    c=(sqrt(xx.^2+yy.^2))
+    cost=1./(c.+1)
+    
 	for i in x:length(A)-x
-		
-		color1=colordiff(color(A[i]),color(A[i+1]))+1
-		edge=[i,i+1,color1]
-		push!(list,edge)
-		color1=colordiff(color(A[i]),color(A[i-1]))+1
-		edge=[i,i-1,color1]
-		push!(list,edge)
-		color1=colordiff(color(A[i]),color(A[i-y]))+1
-		edge=[i,i-y,color1]
-		push!(list,edge)
-		color1=colordiff(color(A[i]),color(A[i+y]))+1
-		edge=[i,i+y,color1]
-		push!(list,edge)
+    edge=[i,i+1,cost[i+1]]
+    push!(list,edge)
+    edge=[i,i-1,cost[i-1]]
+    push!(list,edge)
+    edge=[i,i-y,cost[i-y]]
+    push!(list,edge)
+    edge=[i,i+y,cost[i+y]]
+    push!(list,edge)
+    edge=[i,i-y-1,cost[i-y-1]]
+    push!(list,edge)
+    edge=[i,i-y+1,cost[i-y+1]]
+    push!(list,edge)
+    edge=[i,i+y-1,cost[i+y-1]]
+    push!(list,edge)
+    edge=[i,i+y+1,cost[i+y+1]]
+    push!(list,edge)
 	end
 
 return list
