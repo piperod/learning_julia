@@ -3,8 +3,7 @@ function Deltastep(list,s,delta)
     @everywhere rdc(d::Vector,i::Vector) = rdc(rdc(Dict(),d),i)
     @everywhere rdc(d::Dict,i::Vector) = begin d[i[1]] = []; d[i[2]] = [];d end
     @everywhere rdc(d::Dict,i::Dict) = merge!(d,i)
-    
-    
+
     @everywhere rdt(d::Vector,i::Vector) = rdt(rdt(Dict(),d),i)
     @everywhere rdt(d::Dict,i::Vector) = begin d[i[1]] = 1000000000000000;d[i[2]] = 1000000000000000; d end
     @everywhere rdt(d::Dict,i::Dict) = merge!(d,i)

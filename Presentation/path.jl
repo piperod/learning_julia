@@ -3,7 +3,7 @@ function path(pred,w)
   path = []
   while v<1000000000
         push!(path,v)
-        println("$path")
+        #println("$path")
         v = pred[v]
    end
     
