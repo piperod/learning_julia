@@ -1,0 +1,10 @@
+\select@language {english}
+\contentsline {chapter}{\numberline {1}Introduction}{3}{chapter.1}
+\contentsline {section}{\numberline {1.1}Testing on the shell.}{3}{section.1.1}
+\contentsline {section}{\numberline {1.2}Search():}{4}{section.1.2}
+\contentsline {section}{\numberline {1.3}The Attribute \texttt {\_pw\_.}}{4}{section.1.3}
+\contentsline {section}{\numberline {1.4}Searching by field:}{5}{section.1.4}
+\contentsline {section}{\numberline {1.5}add\_wildcards and something}{6}{section.1.5}
+\contentsline {section}{\numberline {1.6}The output dictionary}{7}{section.1.6}
+\contentsline {section}{\numberline {1.7}use\_dict:}{7}{section.1.7}
+\contentsline {chapter}{\numberline {2}Indices and tables}{9}{chapter.2}

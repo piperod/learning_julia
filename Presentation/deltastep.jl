@@ -81,7 +81,7 @@ function Deltastep(list,s,delta)
         i=i+1
     end
     
-    println("This is the answer: $tent")
+    # println("This is the answer: $tent")
   
     return tent,pred
     
