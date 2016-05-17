@@ -137,16 +137,16 @@ Another more complicated example :
 
 Look at the jupyter notebook with the final presentation for more details. 
    
-.. |first| image:: https://github.com/piperod/learning_julia/blob/master/Presentation/Imagenes/start.gif?raw=true
+.. |first| image:: ../../Imagenes/start.gif
 
-.. |startp| image:: https://github.com/piperod/learning_julia/blob/master/Presentation/Imagenes/startp2.gif?raw=true
+.. |startp| image:: ../../Imagenes/startp2.gif
 
-.. |addprocs| image:: https://github.com/piperod/learning_julia/blob/master/Presentation/Imagenes/addprocs().gif?raw=true
+.. |addprocs| image:: ../../Imagenes/addprocs().gif
 
-.. |nprocs| image:: https://github.com/piperod/learning_julia/blob/master/Presentation/Imagenes/nprocs.gif?raw=true
+.. |nprocs| image:: ../../Imagenes/nprocs.gif
 
-.. |remotecall| image:: https://github.com/piperod/learning_julia/blob/master/Presentation/Imagenes/remotecall.gif?raw=true
+.. |remotecall| image:: ../../Imagenes/remotecall.gif
 
-.. |parallelfor| image:: https://github.com/piperod/learning_julia/blob/master/Presentation/Imagenes/parallel.gif?raw=true
+.. |parallelfor| image:: ../../Imagenes/parallel.gif
 
-.. |shared| image:: https://github.com/piperod/learning_julia/blob/master/Presentation/Imagenes/shared.gif?raw=true
+.. |shared| image:: ../../Imagenes/shared.gif

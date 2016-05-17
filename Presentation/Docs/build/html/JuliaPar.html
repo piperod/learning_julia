@@ -25,6 +25,7 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="top" title="Delta Stepping Algorithm in Parallel : A beginner approach. 0.0.1 documentation" href="index.html" />
+    <link rel="next" title="Delta Stepping Algorithm" href="Algorithm.html" />
     <link rel="prev" title="Introduction" href="Introduction.html" />
    
   
@@ -63,7 +64,7 @@ julia&gt;ref2= @spawnat 1 2 .* fetch(ref)
 julia&gt;fetch(ref2)
 </pre></div>
 </div>
-<p><img alt="remotecall" src="https://github.com/piperod/learning_julia/blob/master/Presentation/Imagenes/remotecall.gif?raw=true" /></p>
+<p><img alt="remotecall" src="_images/remotecall.gif" /></p>
 </div>
 <div class="section" id="high-level-parallelism">
 <h2>High Level Parallelism<a class="headerlink" href="#high-level-parallelism" title="Permalink to this headline">¶</a></h2>
@@ -87,9 +88,9 @@ end
 fetch(a)
 </pre></div>
 </div>
-<p><img alt="parallelfor" src="https://github.com/piperod/learning_julia/blob/master/Presentation/Imagenes/parallel.gif?raw=true" /></p>
+<p><img alt="parallelfor" src="_images/parallel.gif" /></p>
 <p>This code did not work as expected because every process tried to write at the same time, causing an overwriting. To fix the problem you can create a Shared Array in the following way:</p>
-<p><img alt="shared" src="https://github.com/piperod/learning_julia/blob/master/Presentation/Imagenes/shared.gif?raw=true" /></p>
+<p><img alt="shared" src="_images/shared.gif" /></p>
 <p>Another more complicated example :</p>
 <p>Look at the jupyter notebook with the final presentation for more details.</p>
 </div>
@@ -116,6 +117,7 @@ fetch(a)
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
       <li>Previous: <a href="Introduction.html" title="previous chapter">Introduction</a></li>
+      <li>Next: <a href="Algorithm.html" title="next chapter">Delta Stepping Algorithm</a></li>
   </ul></li>
 </ul>
 </div>

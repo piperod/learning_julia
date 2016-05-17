@@ -10,5 +10,15 @@
 \BOOKMARK [1][-]{section.3.2}{The implementation:}{chapter.3}% 10
 \BOOKMARK [1][-]{section.3.3}{Path Function}{chapter.3}% 11
 \BOOKMARK [1][-]{section.3.4}{Example:}{chapter.3}% 12
-\BOOKMARK [0][-]{chapter.4}{Images}{}% 13
-\BOOKMARK [1][-]{section.4.1}{A Little Bit of Julia.}{chapter.4}% 14
+\BOOKMARK [1][-]{section.3.5}{Some considerations}{chapter.3}% 13
+\BOOKMARK [0][-]{chapter.4}{Images}{}% 14
+\BOOKMARK [0][-]{chapter.5}{Set Up the graph.}{}% 15
+\BOOKMARK [1][-]{section.5.1}{Pixels, vertex and edges}{chapter.5}% 16
+\BOOKMARK [1][-]{section.5.2}{Cost function}{chapter.5}% 17
+\BOOKMARK [1][-]{section.5.3}{Setup function}{chapter.5}% 18
+\BOOKMARK [1][-]{section.5.4}{Example}{chapter.5}% 19
+\BOOKMARK [0][-]{chapter.6}{Profiling the Performance:}{}% 20
+\BOOKMARK [1][-]{section.6.1}{Code for serial}{chapter.6}% 21
+\BOOKMARK [1][-]{section.6.2}{Code for parallel}{chapter.6}% 22
+\BOOKMARK [0][-]{chapter.7}{Results}{}% 23
+\BOOKMARK [0][-]{chapter.8}{Analysis}{}% 24

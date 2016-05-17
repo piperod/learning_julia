@@ -157,7 +157,7 @@ When you have it go to the folder \emph{julia/bin} and simply execute \emph{Juli
 \PYG{n}{julia}
 \end{Verbatim}
 
-
+\includegraphics{start.gif}
 
 This initialization would start julia by default with one process. If you want to start with more processes you need to specify it with the following command (It makes sense when -p \# correlates with the number of processors on your machine). For example on mine two cores.
 
@@ -165,7 +165,7 @@ This initialization would start julia by default with one process. If you want t
 julia \PYGZhy{}p 2
 \end{Verbatim}
 
-
+\includegraphics{startp2.gif}
 
 In case you forget to start with this command, you can add more procs from the julia command line:
 
@@ -173,7 +173,7 @@ In case you forget to start with this command, you can add more procs from the j
 \PYG{n}{addprocs}\PYG{p}{(}\PYG{p}{)}
 \end{Verbatim}
 
-
+\includegraphics{addprocs().gif}
 
 Which will add all the available processors by default, but you can specify too just puting inside the parenthesis as many process as cores has your machine.
 
@@ -183,7 +183,7 @@ You can get at any momment the number of available workers by running the follow
 \PYG{n}{nprocs}\PYG{p}{(}\PYG{p}{)}
 \end{Verbatim}
 
-
+\includegraphics{nprocs.gif}
 
 
 \chapter{Julia Parallelism}
@@ -227,7 +227,7 @@ julia\PYGZgt{}ref2= @spawnat 1 2 .* fetch(ref)
 julia\PYGZgt{}fetch(ref2)
 \end{Verbatim}
 
-
+\includegraphics{remotecall.gif}
 
 
 \section{High Level Parallelism}
@@ -266,11 +266,11 @@ end
 fetch(a)
 \end{Verbatim}
 
-
+\includegraphics{parallel.gif}
 
 This code did not work as expected because every process tried to write at the same time, causing an overwriting. To fix the problem you can create a Shared Array in the following way:
 
-
+\includegraphics{shared.gif}
 
 Another more complicated example :
 
@@ -301,9 +301,9 @@ Find a minimal weight path from one chose node \$s in V\$ called the \textbf{sou
 
 \section{The pseudocode:}
 \label{Algorithm:the-pseudocode}
+\includegraphics{algo_1.png}
 
-
-
+\includegraphics{algo_2.png}
 
 
 \section{The implementation:}
@@ -461,69 +461,322 @@ push!(graph,[3,4,2])
 push!(graph,[4,2,5])
 \end{Verbatim}
 
-
+\includegraphics{graph.gif}
 
 Now we have a directed graph. Let us say we want to know the shortest path to each node from the vertice 2, we will do something like:
 
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n}{include}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{deltastep.jl}\PYG{l+s}{\PYGZdq{}}\PYG{p}{)}
+\PYG{n}{include}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{relax.jl}\PYG{l+s}{\PYGZdq{}}\PYG{p}{)}
+\PYG{p}{(}\PYG{n}{tent}\PYG{p}{,}\PYG{n}{pred}\PYG{p}{)}\PYG{o}{=}\PYG{n}{Deltastep}\PYG{p}{(}\PYG{n}{graph}\PYG{p}{,}\PYG{l+m+mi}{2}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{)}
+\end{Verbatim}
+
 This is a simple code that runs over the graph, starting from the node 2 and with a delta of 1.
 
-
+\includegraphics{deltastep.gif}
 
 As is shown. It is obvious that going from node 2 to 2 has to have cost 0. The other nodes can be extracted very easy too.
 
 
+\subsection{Parallel Delta-Stepping}
+\label{Algorithm:parallel-delta-stepping}
+The implementation provided for the Delta stepping algorithm is the following:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+function Deltastep(list,s,delta)
+    @everywhere rdc(d::Vector,i::Vector) = rdc(rdc(Dict(),d),i)
+    @everywhere rdc(d::Dict,i::Vector) = begin d[i[1]] = []; d[i[2]] = [];d end
+    @everywhere rdc(d::Dict,i::Dict) = merge!(d,i)
+    @everywhere rdt(d::Vector,i::Vector) = rdt(rdt(Dict(),d),i)
+    @everywhere rdt(d::Dict,i::Vector) = begin d[i[1]] = 1000000000000000;d[i[2]] = 1000000000000000; d end
+    @everywhere rdt(d::Dict,i::Dict) = merge!(d,i)
+    @everywhere rdcc(d::Vector,i::Vector) = rdcc(rdcc(Dict(),d),i)
+    @everywhere rdcc(d::Dict,i::Vector) = begin d[i[1],i[2]] = i[3]; d end
+    @everywhere rdcc(d::Dict,i::Dict) = merge!(d,i)
+    @everywhere rds(d::Vector,i::Vector) = rds(rds(Set(),d),i)
+    @everywhere rds(d::Set,i::Vector) = begin push!(d,i[1]);push!(d,i[2]); d end
+    @everywhere rds(d::Set,i::Set) = union!(d,i)
+    @everywhere rde(d::Vector,i::Vector) = rde(rde(Set(),d),i)
+    @everywhere rde(d::Set,i::Vector) = begin push!(d,[i[1],i[2]]); d end
+    @everywhere rde(d::Set,i::Set) = union!(d,i)
+    heavy = @parallel (rdc) for item in list
+      item;
+    end
+    light=@parallel (rdc) for item in list
+        item;
+    end
+    tent= @parallel (rdt) for item in list
+        item;
+    end
+    pred= @parallel (rdt) for item in list
+        item;
+    end
+    C = @parallel (rdcc) for item in list
+        item
+    end
+    V = @parallel (rds) for item in list
+    item
+    end
+    E= @parallel (rde) for item in list
+        item
+    end
+    B=Dict\PYGZob{}Any,Set\PYGZcb{}()
+    Req=[]
+    \PYGZsh{} println(\PYGZdq{}Heavy: \PYGZdl{}heavy \PYGZdq{})
+    \PYGZsh{} println(\PYGZdq{}C=\PYGZdl{}C\PYGZdq{})
+    for e in E
+        v=e[1]
+        w=e[2]
+        if C[v,w]\PYGZgt{}delta
+            push!(heavy[v],e)
+        else
+            push!(light[v],e)
+        end
+    end
+    \PYGZsh{} println(\PYGZdq{}Light: \PYGZdl{}light  \PYGZdq{})
+    \PYGZsh{} println(\PYGZdq{}E=\PYGZdl{}E\PYGZdq{})
+    relax(s,0,delta,B,tent,pred,1000000000)
+    i=0
+    while isempty(B)==false
+        \PYGZsh{} println(\PYGZdq{}B=\PYGZdl{}B\PYGZdq{})
+        \PYGZsh{} println(\PYGZdq{}tent=\PYGZdl{}tent\PYGZdq{})
+        \PYGZsh{} Processing vertices from B[i]
+        if haskey(B,i)==true
+            S=Set()
+            \PYGZsh{} Relax recursively all light edges while they stay in B[i]
+            while isempty(B[i])==false
+                \PYGZsh{} Push to Req all light edges from vertices in B[i]
+                Req=[]
+                for v in B[i]
+                    \PYGZsh{} println(\PYGZdq{}v=\PYGZdl{}v\PYGZdq{})
+                    for e in light[v]
+                        \PYGZsh{} println(\PYGZdq{}e=\PYGZdl{}e\PYGZdq{})
+                        push!(Req,[e[2],tent[v]+C[e[1],e[2]],v])
+                    end
+                end
+                \PYGZsh{} Update S
+                union!(S,B[i])
+                B[i]=Set()
+                \PYGZsh{} Relax all Req edges
+                for r in Req
+                    \PYGZsh{} println(\PYGZdq{}r=\PYGZdl{}r\PYGZdq{})
+                    relax(r[1],r[2],delta,B,tent,pred,r[3])
+                end
+            end
+            \PYGZsh{} Relax all heavy edges of vertices in S
+            Req=[]
+            delete!(B,i)
+            for v in S
+                for e in heavy[v]
+                    push!(Req,[e[2],tent[v]+C[e[1],e[2]],v])
+                end
+            end
+            for r in Req
+                relax(r[1],r[2],delta,B,tent,pred,r[3])
+            end
+        end
+
+        i=i+1
+    end
+    println(\PYGZdq{}This is the answer: \PYGZdl{}tent\PYGZdq{})
+    return tent,pred
+end
+\end{Verbatim}
+
+
+\section{Some considerations}
+\label{Algorithm:some-considerations}
+One of the problems I found when trying to implement the algorithm in parallel, was the possibility to implement Shared memory data types for different structures like dictionaries, sets and others.
+
+One of the solutions the community provided me when I asked on Stackoverflow was to create a set everywhere, populate it and in the end merge it. Doing this was helpful, however inefficient for memory allocations.
+
+Let us see an example that clarifies this concept: We want to create a dictionary of sets. We want to set every vertex of the graph as a key and initialize it in parallel.
+
+The first idea was simply to initialize a dictionary and then using \emph{@parallel}
+populate it. Something like this:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+julia\PYGZgt{} C=Dict()
+julia\PYGZgt{} @parallel for item in a
+                C[item[1],item[2]]=item[3]
+           end
+julia\PYGZgt{} println(\PYGZdq{}\PYGZdl{}C\PYGZdq{})
+\end{Verbatim}
+
+This was the result:
+
+\includegraphics{dict.gif}
+
+Again we face the problem of overwriting, from the race conditions. For this reason was necessary to implement the following way:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+julia\PYGZgt{} @everywhere rdc(d::Dict,i::Vector)= begin d[i[1]] = length(a); d end
+julia\PYGZgt{} @everywhere rdc(d::Vector,i::Vector) = rdc(rdc(Dict(),d),i)
+julia\PYGZgt{} @everywhere rdc(d::Dict,i::Dict) = merge!(d,i)
+julia\PYGZgt{} C = @parallel (rdc) for item in a
+                item
+            end
+julia\PYGZgt{} println(\PYGZdq{}\PYGZdl{}C\PYGZdq{})
+\end{Verbatim}
+
+Implementing this way lead me to this desired result:
+
+\includegraphics{paradict.gif}
+
+Several solutions like this one were useful to parallel implementation.
+
+
 \chapter{Images}
 \label{Images:images}\label{Images::doc}\label{Images:id1}
-Julia language is a high-level, high-performance dynamic programming language for technical computing. Between several other features  it provides a sophisticated compiler and distributed parallel execution, that allows the user to code sophisticated applications. Given the novelty of the language, is hard to find documentation that help the beginners and new learners to understand the core concepts and advantages of using Julia. For this reason, and mostly as a new learner, I provide this work that show by example some usages and advantages of using Julia .
+The images in this project are very important. Specially because from them will be extracted the graphs that would allow us to run relevant  examples of  the algorihtm.
 
-The example I will be refering to is the Delta-stepping algorithm. Which is a clever proposition developed by  Madduri et. all. In their paper Parallel Shortest Path Algorihtm for Solving Large Scale Instances; along with the one by M. Kranjcevic \$Delta\$-Stepping Algorithm for Shared Memories Architectures.
+The Images package developed by Tim Holy, was extensively used. Let us provide some insights about how this work.
 
-This algorithm will be specially used  to find the contour of an image. Using the package \href{https://github.com/timholy/Images.jl}{Images} I converted the image to gray scale and calculate the gradient to compute a function cost. Later I  set a directed graph where the pixels where the nodes and the cost to go to a neighbor pixel with different color was high, then using the delta-stepping algorithm I can find the shortest path, which was also the contour.
-
-A parallel implementation in Julia of this algorithm is propposed. For this implementation I ran several test to evaluate it's performance. In particular three images were selected.
-
-There are many changes that still have to be done. In the next version, I will be updating the implementation changing the buckets from a dictionary of sets(not very efficient) to a shared list (to provide better parallelism). As well I will be working on the tutorials so that clear and nicer examples can be shown.
-
-Note: All the information  provided here is based on the Official Documentation of Julia, any other source will be cited explicitely.
-
-
-\section{A Little Bit of Julia.}
-\label{Images:a-little-bit-of-julia}
-Instalation might be very tricky. However for learning I suggest you to download the binary extension that can be found \href{http://julialang.org/downloads/}{Here}
-
-When you have it go to the folder \emph{julia/bin} and simply execute \emph{Julia}. Like:
+The first step is to load the image. The file should be on the same path you are executing Julia. You use the following command that would load the image as an array of pixels:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\PYG{n}{julia}
+julia\PYGZgt{} using Images, Colors, FixedPointNumbers, ImageView
+julia\PYGZgt{} img=load(\PYGZdq{}rose.png\PYGZdq{})
+\end{Verbatim}
+
+Now we can play with  and ``see'' the data:
+
+\includegraphics{load.gif}
+
+If you want to see the image you can use the following command:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n}{julia}\PYG{o}{\PYGZgt{}}  \PYG{n}{view}\PYG{p}{(}\PYG{n}{img}\PYG{p}{)}
+\end{Verbatim}
+
+That would open an extra window showing
+
+\includegraphics{rose.png}
+
+Now we can convert this image to gray scale, so it is easy to handle for calculations.
+
+{\color{red}\bfseries{}\textbar{}rosegray\textbar{}}
+
+Now we can calculate gradient using the function from Images
+
+\begin{Verbatim}[commandchars=\\\{\}]
+julia\PYGZgt{} xx,yy=imgradients(A)
+julia\PYGZgt{} c=(sqrt(xx.\PYGZca{}2+yy.\PYGZca{}2))
+julia\PYGZgt{} view(c)
+\end{Verbatim}
+
+\includegraphics{gradient.png}
+
+Now we need to find a way to reduce the cost of the middle of the images but make larger the cost of the border. To so I ran the following code:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+julia\PYGZgt{} cost=1./(c.+1)
+julia\PYGZgt{} view(cost)
+\end{Verbatim}
+
+\includegraphics{cost.png}
+
+Now if you go and see the cost of the borders they will be smaller thant those outside (they will be around 1). Therefore we will have the way to form the shortest path as the border of the image.
+
+\includegraphics{costvi.gif}
+
+Now we are ready to set up the graph.
+
+
+\chapter{Set Up the graph.}
+\label{setup:setup}\label{setup:set-up-the-graph}\label{setup::doc}
+In the last section I explained how to extract information from a picture and more important how to transform that information in order to make it relevant for our purposes.
+
+In this section I will explain how I build the graph out of the image.
+
+The directed graph we are trying to set is described by a list of items where each item has the following items (V1,V2, C) where V1 is connected with V2 (in that direction) and C is the cost of going from V1 to V2.
+
+
+\section{Pixels, vertex and edges}
+\label{setup:pixels-vertex-and-edges}
+The nodes of our graph would be given by each pixel of the image. In future releases we will reduce significatively the number of pixels to describe a picture. Right now for the rose example we will be dealing with around 200.000 nodes. Heavy enough to make our algorithm to go for around a minute before getting the answer. In the future the idea is reduce those nodes to the half using zooming or different staff.
+
+The edges are therefore a bigger problem. Each pixel has eight neigbours (I considered up,down, left, right and the corners), so there are 8 edges defined for each pixel. Setting the set of edges from our graph to around a million edges! This is just a huge ammount of information. In the following releases this will be  reduced significatively, because this causes a poor performance of the application.
+
+
+\section{Cost function}
+\label{setup:cost-function}
+As explained before the reciprocus of the gradient would be used to calculate the cost. Actually the cost would be given by the gradient in the ending pixel itself.
+
+
+\section{Setup function}
+\label{setup:setup-function}
+The following code is used to setup the graph. The input is an image and the output is a graph in the structure previously explained.
+
+
+\section{Example}
+\label{setup:example}
+The following example ran over the rose picture would show the bast number of edges created by this approach. This would change in future releases.
+
+{\color{red}\bfseries{}\textbar{}setup\textbar{}}
+
+
+\chapter{Profiling the Performance:}
+\label{profiling:profiling-the-performance}\label{profiling:profiling}\label{profiling::doc}
+Julia has \emph{@time}, \emph{@elapsed} and  \emph{@allocated} profiling tools. The firs one, time the application and shows the memory allocations  but shows the result as well. The second one would only output the time and the third one would only output the memory allocations.
+
+This code was implemented to time and measure the memory allocation of the algorithm.
+
+
+\section{Code for serial}
+\label{profiling:code-for-serial}
+\begin{Verbatim}[commandchars=\\\{\}]
+using Images, Colors, FixedPointNumbers, ImageView
+img=load(\PYGZdq{}rose.png\PYGZdq{})
+include(\PYGZdq{}setup.jl\PYGZdq{})
+include(\PYGZdq{}deltastep.jl\PYGZdq{})
+include(\PYGZdq{}relax.jl\PYGZdq{})
+include(\PYGZdq{}path.jl\PYGZdq{})
+graph=setup(img)
+f=open(\PYGZdq{}output.txt\PYGZdq{},\PYGZdq{}w\PYGZdq{})
+for i in [10,50,100,500,1000]
+Time=@elapsed Deltastep(graph,5000,i)
+Alloc=@allocated Deltastep(graph,5000,i)
+write(f,\PYGZdq{}  Deltastep : \PYGZdl{}i Time Elapsed \PYGZdl{}Time Memory Allocations : \PYGZdl{}Alloc \PYGZbs{}n\PYGZdq{})
+end
+close(f)
 \end{Verbatim}
 
 
-
-This initialization would start julia by default with one process. If you want to start with more processes you need to specify it with the following command (It makes sense when -p \# correlates with the number of processors on your machine). For example on mine two cores.
-
+\section{Code for parallel}
+\label{profiling:code-for-parallel}
 \begin{Verbatim}[commandchars=\\\{\}]
-julia \PYGZhy{}p 2
+using Images, Colors, FixedPointNumbers, ImageView
+addprocs()
+img=load(\PYGZdq{}Imagenes/rose.png\PYGZdq{})
+include(\PYGZdq{}setup.jl\PYGZdq{})
+include(\PYGZdq{}relax.jl\PYGZdq{})
+include(\PYGZdq{}path.jl\PYGZdq{})
+include(\PYGZdq{}deltastepar.jl\PYGZdq{})
+graph=setup(img)
+f=open(\PYGZdq{}outputpar.txt\PYGZdq{},\PYGZdq{}w\PYGZdq{})
+for i in [10,50,100,500,1000]
+Time=@elapsed Deltastep(graph,5000,i)
+Alloc=@allocated Deltastep(graph,5000,i)
+write(f,\PYGZdq{}Image :\PYGZdl{}size  Deltastep : \PYGZdl{}i Time Elapsed \PYGZdl{}Time Memory Allocations : \PYGZdl{}Alloc \PYGZbs{}n \PYGZdq{})
+end
+close(f)
 \end{Verbatim}
 
 
+\chapter{Results}
+\label{profiling:results}
+Running the profiling tools on the super computer Stampede I obtained the following results:
 
-In case you forget to start with this command, you can add more procs from the julia command line:
+{\color{red}\bfseries{}\textbar{}experiment\textbar{}}
 
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYG{n}{addprocs}\PYG{p}{(}\PYG{p}{)}
-\end{Verbatim}
-
-
-
-Which will add all the available processors by default, but you can specify too just puting inside the parenthesis as many process as cores has your machine.
-
-You can get at any momment the number of available workers by running the following code:
-
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYG{n}{nprocs}\PYG{p}{(}\PYG{p}{)}
-\end{Verbatim}
+{\color{red}\bfseries{}\textbar{}}allocations
 
 
+\chapter{Analysis}
+\label{profiling:analysis}
+The performance observed in three processors of stampede was about three times higher than in the serial code.
+.. {\color{red}\bfseries{}\textbar{}experiment\textbar{}} image:: ../../Imagenes/experiment.png
 
 
 

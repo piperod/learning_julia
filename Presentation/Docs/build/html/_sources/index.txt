@@ -15,6 +15,9 @@ Contents:
    JuliaPar
    Algorithm
    Images
+   setup
+   profiling
+   quickreference
 
 
 

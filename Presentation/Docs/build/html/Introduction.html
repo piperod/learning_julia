@@ -25,6 +25,7 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="top" title="Delta Stepping Algorithm in Parallel : A beginner approach. 0.0.1 documentation" href="index.html" />
+    <link rel="next" title="Julia Parallelism" href="JuliaPar.html" />
     <link rel="prev" title="Welcome to Delta Stepping Algorithm in Julia : A beginner approach.’s Documentation" href="index.html" />
    
   
@@ -53,23 +54,23 @@
 <div class="code bash highlight-python"><div class="highlight"><pre><span class="n">julia</span>
 </pre></div>
 </div>
-<p><img alt="first" src="https://github.com/piperod/learning_julia/blob/master/Presentation/Imagenes/start.gif?raw=true" /></p>
+<p><img alt="first" src="_images/start.gif" /></p>
 <p>This initialization would start julia by default with one process. If you want to start with more processes you need to specify it with the following command (It makes sense when -p # correlates with the number of processors on your machine). For example on mine two cores.</p>
 <div class="code bash highlight-python"><div class="highlight"><pre>julia -p 2
 </pre></div>
 </div>
-<p><img alt="startp" src="https://github.com/piperod/learning_julia/blob/master/Presentation/Imagenes/startp2.gif?raw=true" /></p>
+<p><img alt="startp" src="_images/startp2.gif" /></p>
 <p>In case you forget to start with this command, you can add more procs from the julia command line:</p>
 <div class="code bash highlight-python"><div class="highlight"><pre><span class="n">addprocs</span><span class="p">()</span>
 </pre></div>
 </div>
-<p><img alt="addprocs" src="https://github.com/piperod/learning_julia/blob/master/Presentation/Imagenes/addprocs().gif?raw=true" /></p>
+<p><img alt="addprocs" src="_images/addprocs().gif" /></p>
 <p>Which will add all the available processors by default, but you can specify too just puting inside the parenthesis as many process as cores has your machine.</p>
 <p>You can get at any momment the number of available workers by running the following code:</p>
 <div class="code bash highlight-python"><div class="highlight"><pre><span class="n">nprocs</span><span class="p">()</span>
 </pre></div>
 </div>
-<p><img alt="nprocs" src="https://github.com/piperod/learning_julia/blob/master/Presentation/Imagenes/nprocs.gif?raw=true" /></p>
+<p><img alt="nprocs" src="_images/nprocs.gif" /></p>
 </div>
 </div>
 
@@ -91,6 +92,7 @@
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
       <li>Previous: <a href="index.html" title="previous chapter">Welcome to Delta Stepping Algorithm in Julia : A beginner approach.&#8217;s Documentation</a></li>
+      <li>Next: <a href="JuliaPar.html" title="next chapter">Julia Parallelism</a></li>
   </ul></li>
 </ul>
 </div>

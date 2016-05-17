@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.5.24)  17 MAY 2016 00:58
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.5.24)  17 MAY 2016 14:01
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -942,51 +942,399 @@ LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <24.88> not available
 LaTeX Font Info:    Try loading font information for T1+pcr on input line 156.
 (/usr/local/texlive/2015/texmf-dist/tex/latex/psnfss/t1pcr.fd
 File: t1pcr.fd 2001/06/04 font definitions for T1/pcr.
-) [3] [4]
+)
+
+! LaTeX Error: Unknown graphics extension: .gif.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.160 \includegraphics{start.gif}
+                                 
+? ç
+Type <return> to proceed, S to scroll future error messages,
+R to run without stopping, Q to run quietly,
+I to insert something, E to edit your file,
+1 or ... or 9 to ignore the next 1 to 9 tokens of input,
+H for help, X to quit.
+? 
+
+! LaTeX Error: Unknown graphics extension: .gif.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.160 \includegraphics{start.gif}
+                                 
+? 
+
+! LaTeX Error: Unknown graphics extension: .gif.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.168 \includegraphics{startp2.gif}
+                                   
+? 
+
+! LaTeX Error: Unknown graphics extension: .gif.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.168 \includegraphics{startp2.gif}
+                                   
+? 
+
+! LaTeX Error: Unknown graphics extension: .gif.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.176 \includegraphics{addprocs().gif}
+                                      
+? 
+
+! LaTeX Error: Unknown graphics extension: .gif.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.176 \includegraphics{addprocs().gif}
+                                      
+? 
+[3]
+
+! LaTeX Error: Unknown graphics extension: .gif.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.186 \includegraphics{nprocs.gif}
+                                  
+? 
+
+! LaTeX Error: Unknown graphics extension: .gif.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.186 \includegraphics{nprocs.gif}
+                                  
+? 
+[4]
 Chapter 2.
 LaTeX Font Info:    Try loading font information for TS1+ptm on input line 204.
 
 (/usr/local/texlive/2015/texmf-dist/tex/latex/psnfss/ts1ptm.fd
 File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
-) [5
+)
 
-] [6]
-Chapter 3.
-[7
+! LaTeX Error: Unknown graphics extension: .gif.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.230 \includegraphics{remotecall.gif}
+                                      
+? 
+
+! LaTeX Error: Unknown graphics extension: .gif.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.230 \includegraphics{remotecall.gif}
+                                      
+? 
+[5
 
 ]
-Underfull \vbox (badness 10000) detected at line 395
- []
 
+! LaTeX Error: Unknown graphics extension: .gif.
 
-Underfull \vbox (badness 10000) detected at line 395
- []
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.269 \includegraphics{parallel.gif}
+                                    
+? 
 
-[8] [9] [10]
+! LaTeX Error: Unknown graphics extension: .gif.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.269 \includegraphics{parallel.gif}
+                                    
+? 
+
+! LaTeX Error: Unknown graphics extension: .gif.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.273 \includegraphics{shared.gif}
+                                  
+? 
+
+! LaTeX Error: Unknown graphics extension: .gif.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.273 \includegraphics{shared.gif}
+                                  
+? 
+[6]
+Chapter 3.
+<algo_1.png, id=131, 442.65375pt x 446.66875pt>
+File: algo_1.png Graphic file (type png)
+ <use algo_1.png>
+Package pdftex.def Info: algo_1.png used on input line 304.
+(pdftex.def)             Requested size: 442.65265pt x 446.66765pt.
+File: algo_1.png Graphic file (type png)
+
+<use algo_1.png>
+Package pdftex.def Info: algo_1.png used on input line 304.
+(pdftex.def)             Requested size: 442.65265pt x 446.66765pt.
+ <algo_2.png, id=133, 444.66125pt x 170.6375pt>
+File: algo_2.png Graphic file (type png)
+
+<use algo_2.png>
+Package pdftex.def Info: algo_2.png used on input line 306.
+(pdftex.def)             Requested size: 444.66016pt x 170.63707pt.
+ [7
+
+]
+File: algo_2.png Graphic file (type png)
+ <use algo_2.png>
+Package pdftex.def Info: algo_2.png used on input line 306.
+(pdftex.def)             Requested size: 444.66016pt x 170.63707pt.
+ [8 <./algo_1.png>] [9 <./algo_2.png>]
+[10]
+
+! LaTeX Error: Unknown graphics extension: .gif.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.464 \includegraphics{graph.gif}
+                                 
+? 
+
+! LaTeX Error: Unknown graphics extension: .gif.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.464 \includegraphics{graph.gif}
+                                 
+? 
+
+! LaTeX Error: Unknown graphics extension: .gif.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.476 \includegraphics{deltastep.gif}
+                                     
+? 
+
+! LaTeX Error: Unknown graphics extension: .gif.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.476 \includegraphics{deltastep.gif}
+                                     
+? 
+[11]
+LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <12> not available
+(Font)              Font shape `T1/phv/b/n' tried instead on input line 481.
+ [12] [13]
+
+! LaTeX Error: Unknown graphics extension: .gif.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.608 \includegraphics{dict.gif}
+                                
+? 
+
+! LaTeX Error: Unknown graphics extension: .gif.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.608 \includegraphics{dict.gif}
+                                
+? 
+
+! LaTeX Error: Unknown graphics extension: .gif.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.624 \includegraphics{paradict.gif}
+                                    
+? 
+
+! LaTeX Error: Unknown graphics extension: .gif.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.624 \includegraphics{paradict.gif}
+                                    
+? 
+[14]
 Chapter 4.
-[11
 
-] (./DeltaSteppingAlgorithminParallelAbeginnerapproach.ind)
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 532.
- [12]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 532.
+! LaTeX Error: Unknown graphics extension: .gif.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.644 \includegraphics{load.gif}
+                                
+? 
+
+! LaTeX Error: Unknown graphics extension: .gif.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.644 \includegraphics{load.gif}
+                                
+? 
+<rose.png, id=171, 492.84125pt x 436.63126pt>
+File: rose.png Graphic file (type png)
+ <use rose.png>
+Package pdftex.def Info: rose.png used on input line 654.
+(pdftex.def)             Requested size: 492.84003pt x 436.63019pt.
+File: rose.png Graphic file (type png)
+ <use rose.png>
+Package pdftex.def Info: rose.png used on input line 654.
+(pdftex.def)             Requested size: 469.755pt x 416.19646pt.
+
+[15
+
+] <gradient.png, id=177, 461.725pt x 420.57124pt>
+File: gradient.png Graphic file (type png)
+ <use gradient.png>
+Package pdftex.def Info: gradient.png used on input line 668.
+(pdftex.def)             Requested size: 461.72388pt x 420.57022pt.
+File: gradient.png Graphic file (type png)
+
+<use gradient.png>
+Package pdftex.def Info: gradient.png used on input line 668.
+(pdftex.def)             Requested size: 461.72388pt x 420.57022pt.
+ [16 <./rose.png>]
+<cost.png, id=183, 414.54875pt x 453.695pt>
+File: cost.png Graphic file (type png)
+ <use cost.png>
+Package pdftex.def Info: cost.png used on input line 677.
+(pdftex.def)             Requested size: 414.54773pt x 453.6939pt.
+File: cost.png Graphic file (type png)
+ <use cost.png>
+Package pdftex.def Info: cost.png used on input line 677.
+(pdftex.def)             Requested size: 414.54773pt x 453.6939pt.
+
+[17 <./gradient.png>]
+
+! LaTeX Error: Unknown graphics extension: .gif.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.681 \includegraphics{costvi.gif}
+                                  
+? 
+
+! LaTeX Error: Unknown graphics extension: .gif.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.681 \includegraphics{costvi.gif}
+                                  
+? 
+[18 <./cost.png>]
+Chapter 5.
+[19
+
+] [20
+
+]
+Chapter 6.
+[21] [22
+
+]
+Chapter 7.
+[23] [24
+
+]
+Chapter 8.
+(./DeltaSteppingAlgorithminParallelAbeginnerapproach.ind)
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 785.
+ [25]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 785.
 
 (./DeltaSteppingAlgorithminParallelAbeginnerapproach.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 532.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 532.
-Package rerunfilecheck Info: File `DeltaSteppingAlgorithminParallelAbeginnerapp
-roach.out' has not changed.
-(rerunfilecheck)             Checksum: 17FEF9AAA591255630527DD813F26D74;824.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 532.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 785.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 785.
+
+
+Package rerunfilecheck Warning: File `DeltaSteppingAlgorithminParallelAbeginner
+approach.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+Package rerunfilecheck Info: Checksums for `DeltaSteppingAlgorithminParallelAbe
+ginnerapproach.out':
+(rerunfilecheck)             Before: 117A67CA1F01C6716D41270E29340885;821
+(rerunfilecheck)             After:  4CC7249AC99FA35E5C0BDFBC7FB094C6;1395.
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 785.
  ) 
 Here is how much of TeX's memory you used:
- 9194 strings out of 493089
- 129283 string characters out of 6134842
- 235096 words of memory out of 5000000
- 12397 multiletter control sequences out of 15000+600000
- 53361 words of font info for 58 fonts, out of 8000000 for 9000
+ 9286 strings out of 493089
+ 130458 string characters out of 6134842
+ 234154 words of memory out of 5000000
+ 12443 multiletter control sequences out of 15000+600000
+ 57827 words of font info for 61 fonts, out of 8000000 for 9000
  1142 hyphenation exceptions out of 8191
- 36i,11n,45p,620b,407s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 36i,12n,52p,620b,407s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2015/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/local/t
 exlive/2015/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/local/texlive/2
 015/texmf-dist/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/local/texlive/2015/tex
@@ -994,11 +1342,11 @@ mf-dist/fonts/type1/urw/helvetic/uhvbo8a.pfb></usr/local/texlive/2015/texmf-dis
 t/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2015/texmf-dist/fonts/ty
 pe1/urw/times/utmr8a.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/urw/ti
 mes/utmri8a.pfb>
-Output written on DeltaSteppingAlgorithminParallelAbeginnerapproach.pdf (16 pag
-es, 103836 bytes).
+Output written on DeltaSteppingAlgorithminParallelAbeginnerapproach.pdf (29 pag
+es, 394226 bytes).
 PDF statistics:
- 190 PDF objects out of 1000 (max. 8388607)
- 159 compressed objects within 2 object streams
- 33 named destinations out of 1000 (max. 500000)
- 133 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 271 PDF objects out of 1000 (max. 8388607)
+ 216 compressed objects within 3 object streams
+ 57 named destinations out of 1000 (max. 500000)
+ 158 words of extra memory for PDF output out of 10000 (max. 10000000)
 
