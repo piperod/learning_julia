@@ -1,0 +1,162 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Julia Parallelism &mdash; Delta Stepping Algorithm in Parallel : A beginner approach. 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="Delta Stepping Algorithm in Parallel : A beginner approach. 0.0.1 documentation" href="index.html" />
+    <link rel="prev" title="Introduction" href="Introduction.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="julia-parallelism">
+<h1>Julia Parallelism<a class="headerlink" href="#julia-parallelism" title="Permalink to this headline">¶</a></h1>
+<p>Julia provides a multiprocessing environment based on message passing to allow programs to run on multiple processes in separate memory domains at once.</p>
+<p>Julia’s implementation of message passing is different from other environments such as MPI [1]. Communication in Julia is generally “one-sided”, meaning that the programmer needs to explicitly manage only one process in a two-process operation. Furthermore, these operations typically do not look like “message send” and “message receive” but rather resemble higher-level operations like calls to user functions.</p>
+<div class="section" id="low-level-parallelism">
+<h2>Low-level Parallelism<a class="headerlink" href="#low-level-parallelism" title="Permalink to this headline">¶</a></h2>
+<p>Parallel programming in Julia is built on two primitives: remote references and remote calls. A remote reference is an object that can be used from any process to refer to an object stored on a particular process. A remote call is a request by one process to call a certain function on certain arguments on another (possibly the same) process.</p>
+<p>These references, however,  are low-level. Therefore is not recomendable to use them unless is very necessary for specific things. Usually higher level functions would provide very efficient performance.</p>
+<p>Some basic functions are:</p>
+<ul class="simple">
+<li><cite>remotecall()</cite>: Call a function asynchronously on the given arguments on the specified process. Returns a Future. Keyword arguments, if any, are passed through to func.</li>
+<li><cite>fetch()</cite>: Waits and fetches a value from x depending on the type of x. Does not remove the item fetched:</li>
+<li><cite>&#64;spawn</cite>: Creates a closure around an expression and runs it on an automatically-chosen process, returning a RemoteRef to the result.</li>
+<li><cite>&#64;spawnat</cite>: Accepts two arguments, p(process) and an expression. A closure is created around the expression and run asynchronously on process p. Returns a Future to the result.</li>
+</ul>
+</div>
+<div class="section" id="examples">
+<h2>Examples:<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<p>In the following example the remotecall function would be used to automatically run the function fill <cite>fill</cite> which basically fills an array of 2 by 2 with numbers 3. Then we can fetch the result of that remote reference and store in a variable <cite>ref</cite>. Then using <cite>&#64;spawnat</cite> we can specify where we want to implement certain function, in this case we want to multiply the array declared by 2, giving as a result a 2 by 2 array with numbers 6.</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>julia&gt;ref=remotecall(2,fill,2,2,2)
+julia&gt;fetch(ref)
+julia&gt;ref2= @spawnat 1 2 .* fetch(ref)
+julia&gt;fetch(ref2)
+</pre></div>
+</div>
+<p><img alt="remotecall" src="https://github.com/piperod/learning_julia/blob/master/Presentation/Imagenes/remotecall.gif?raw=true" /></p>
+</div>
+<div class="section" id="high-level-parallelism">
+<h2>High Level Parallelism<a class="headerlink" href="#high-level-parallelism" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><cite>&#64;parallel</cite> (reducer) : Like the openmp <cite>#pragma parallel for</cite>
+This one is often used in for loops.  HOWEVER IS IMPORTANT TO DEFINE THE REDUCER PROPERLY!</li>
+<li><cite>pmaps()</cite> : This is a parallel execution for more complicated parallel initializations.</li>
+<li><cite>SharedArray</cite> : This structure is used for shared memory computations</li>
+<li><cite>&#64;time</cite> : This profile tool measure the time. Shown After the execution.</li>
+<li><cite>&#64;elapsed</cite> : This profile tool measure the time, but does show the output  time rather than the function.</li>
+<li><cite>&#64;Allocated</cite>: This profiling tool measure the allocations in memory.</li>
+</ul>
+</div>
+<div class="section" id="id1">
+<h2>Examples:<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>The following example would show why is important to be carefull when using <cite>&#64;parallel</cite> using it without declaring a shared array might cause the following problem:</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>a = zeros(10)
+@parallel for i=1:10
+        a[i] = i
+end
+fetch(a)
+</pre></div>
+</div>
+<p><img alt="parallelfor" src="https://github.com/piperod/learning_julia/blob/master/Presentation/Imagenes/parallel.gif?raw=true" /></p>
+<p>This code did not work as expected because every process tried to write at the same time, causing an overwriting. To fix the problem you can create a Shared Array in the following way:</p>
+<p><img alt="shared" src="https://github.com/piperod/learning_julia/blob/master/Presentation/Imagenes/shared.gif?raw=true" /></p>
+<p>Another more complicated example :</p>
+<p>Look at the jupyter notebook with the final presentation for more details.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Julia Parallelism</a><ul>
+<li><a class="reference internal" href="#low-level-parallelism">Low-level Parallelism</a></li>
+<li><a class="reference internal" href="#examples">Examples:</a></li>
+<li><a class="reference internal" href="#high-level-parallelism">High Level Parallelism</a></li>
+<li><a class="reference internal" href="#id1">Examples:</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="Introduction.html" title="previous chapter">Introduction</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/JuliaPar.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Ivan Felipe Rodriguez Rodriguez.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
+      
+      |
+      <a href="_sources/JuliaPar.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

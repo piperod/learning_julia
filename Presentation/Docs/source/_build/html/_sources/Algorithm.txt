@@ -1,0 +1,19 @@
+.. _Algorithm:
+
+========================
+Delta Stepping Algorithm
+========================
+
+During this work I implemented on Julia  The delta stepping algorithm proppossed by [Meyer and Sanders] in 1998. This implementation split the Dijikstra algorithm  in phases so that each phase can be implemented on parallel. 
+
+The purpouse of this algorithm is to solve the so called SSSP problem (Single Source Shortest Path Problem). That can be stated as follows:
+
+``Given a weighted graph G=(V,E,c) where:
+
+* V is a Set of vertices or nodes
+
+* E is a set of edges, i.e., ordered pairs of nodes 
+
+* c cost or weight function $c: E \rightarrow \mathbb{N}$, 
+
+Find a minimal weight path from one chose node $s \in V$ called the ** source node**, to all other nodes in V. We say that the nodes $v,w \in V$ are neighbours if $(v,w) \in E$, i.e., if there exists and edge between them.``

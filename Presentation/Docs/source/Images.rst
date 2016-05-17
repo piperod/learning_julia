@@ -1,7 +1,7 @@
-.. _Introduction:
+.. _Images:
 
 ============
-Introduction
+Images
 ============
 
 Julia language is a high-level, high-performance dynamic programming language for technical computing. Between several other features  it provides a sophisticated compiler and distributed parallel execution, that allows the user to code sophisticated applications. Given the novelty of the language, is hard to find documentation that help the beginners and new learners to understand the core concepts and advantages of using Julia. For this reason, and mostly as a new learner, I provide this work that show by example some usages and advantages of using `Julia <julialang.com/docs>`_ . 

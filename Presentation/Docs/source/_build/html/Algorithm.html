@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Welcome to Delta Stepping Algorithm in Julia : A beginner approach.’s Documentation &mdash; Delta Stepping Algorithm in Parallel : A beginner approach. 0.0.1 documentation</title>
+    <title>Delta Stepping Algorithm &mdash; Delta Stepping Algorithm in Parallel : A beginner approach. 0.0.1 documentation</title>
     
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -24,8 +24,14 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <link rel="top" title="Delta Stepping Algorithm in Parallel : A beginner approach. 0.0.1 documentation" href="#" />
-    <link rel="next" title="Introduction" href="Introduction.html" />
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+      });
+    </script>
+<script type="text/javascript" async src="path-to-mathjax/MathJax.js?config=TeX-AMS_CHTML"></script>
+    <link rel="top" title="Delta Stepping Algorithm in Parallel : A beginner approach. 0.0.1 documentation" href="index.html" />
+    <link rel="prev" title="Julia Parallelism" href="JuliaPar.html" />
    
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
@@ -38,35 +44,17 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="welcome-to-delta-stepping-algorithm-in-julia-a-beginner-approach-s-documentation">
-<h1>Welcome to Delta Stepping Algorithm in Julia : A beginner approach.&#8217;s Documentation<a class="headerlink" href="#welcome-to-delta-stepping-algorithm-in-julia-a-beginner-approach-s-documentation" title="Permalink to this headline">¶</a></h1>
-<p>Contents:</p>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="Introduction.html">Introduction</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="Introduction.html#a-little-bit-of-julia">A Little Bit of Julia.</a></li>
+  <div class="section" id="delta-stepping-algorithm">
+<span id="algorithm"></span><h1>Delta Stepping Algorithm<a class="headerlink" href="#delta-stepping-algorithm" title="Permalink to this headline">¶</a></h1>
+<p>During this work I implemented on Julia  The delta stepping algorithm proppossed by [Meyer and Sanders] in 1998. This implementation split the Dijikstra algorithm  in phases so that each phase can be implemented on parallel.</p>
+<p>The purpouse of this algorithm is to solve the so called SSSP problem (Single Source Shortest Path Problem). That can be stated as follows:</p>
+<p><a href="#id1"><span class="problematic" id="id2">``</span></a>Given a weighted graph G=(V,E,c) where:</p>
+<ul class="simple">
+<li>V is a Set of vertices or nodes</li>
+<li>E is a set of edges, i.e., ordered pairs of nodes</li>
+<li>c cost or weight function $c: E rightarrow mathbb{N}$,</li>
 </ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="JuliaPar.html">Julia Parallelism</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="JuliaPar.html#low-level-parallelism">Low-level Parallelism</a></li>
-<li class="toctree-l2"><a class="reference internal" href="JuliaPar.html#examples">Examples:</a></li>
-<li class="toctree-l2"><a class="reference internal" href="JuliaPar.html#high-level-parallelism">High Level Parallelism</a></li>
-<li class="toctree-l2"><a class="reference internal" href="JuliaPar.html#id1">Examples:</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="Algorithm.html">Delta Stepping Algorithm</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="Algorithm.html#the-pseudocode">The pseudocode:</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Algorithm.html#the-implementation">The implementation:</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Algorithm.html#path-function">Path Function</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Algorithm.html#example">Example:</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="Images.html">Images</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="Images.html#a-little-bit-of-julia">A Little Bit of Julia.</a></li>
-</ul>
-</li>
-</ul>
-</div>
+<p>Find a minimal weight path from one chose node $s in V$ called the ** source node**, to all other nodes in V. We say that the nodes $v,w in V$ are neighbours if $(v,w) in E$, i.e., if there exists and edge between them.``</p>
 </div>
 
 
@@ -77,15 +65,15 @@
         <div class="sphinxsidebarwrapper"><div class="relations">
 <h3>Related Topics</h3>
 <ul>
-  <li><a href="#">Documentation overview</a><ul>
-      <li>Next: <a href="Introduction.html" title="next chapter">Introduction</a></li>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="JuliaPar.html" title="previous chapter">Julia Parallelism</a></li>
   </ul></li>
 </ul>
 </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="_sources/index.txt"
+      <li><a href="_sources/Algorithm.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
@@ -114,7 +102,7 @@
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
       
       |
-      <a href="_sources/index.txt"
+      <a href="_sources/Algorithm.txt"
           rel="nofollow">Page source</a>
     </div>
 

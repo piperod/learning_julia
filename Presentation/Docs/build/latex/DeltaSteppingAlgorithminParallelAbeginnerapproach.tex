@@ -19,7 +19,7 @@
 
 
 \title{Delta Stepping Algorithm in Parallel : A beginner approach. Documentation}
-\date{May 16, 2016}
+\date{May 17, 2016}
 \release{0.0.1}
 \author{Ivan Felipe Rodriguez Rodriguez}
 \newcommand{\sphinxlogo}{}
@@ -133,7 +133,7 @@ Contents:
 
 
 \chapter{Introduction}
-\label{Introduction:introduction}\label{Introduction:welcome-to-delta-stepping-algorithm-in-parallel-a-beginner-approach-s-documentation}\label{Introduction::doc}\label{Introduction:id1}
+\label{Introduction:introduction}\label{Introduction:welcome-to-delta-stepping-algorithm-in-julia-a-beginner-approach-s-documentation}\label{Introduction::doc}\label{Introduction:id1}
 Julia language is a high-level, high-performance dynamic programming language for technical computing. Between several other features  it provides a sophisticated compiler and distributed parallel execution, that allows the user to code sophisticated applications. Given the novelty of the language, is hard to find documentation that help the beginners and new learners to understand the core concepts and advantages of using Julia. For this reason, and mostly as a new learner, I provide this work that show by example some usages and advantages of using Julia .
 
 The example I will be refering to is the Delta-stepping algorithm. Which is a clever proposition developed by  Madduri et. all. In their paper Parallel Shortest Path Algorihtm for Solving Large Scale Instances; along with the one by M. Kranjcevic \$Delta\$-Stepping Algorithm for Shared Memories Architectures.
@@ -143,6 +143,8 @@ This algorithm will be specially used  to find the contour of an image. Using th
 A parallel implementation in Julia of this algorithm is propposed. For this implementation I ran several test to evaluate it's performance. In particular three images were selected.
 
 There are many changes that still have to be done. In the next version, I will be updating the implementation changing the buckets from a dictionary of sets(not very efficient) to a shared list (to provide better parallelism). As well I will be working on the tutorials so that clear and nicer examples can be shown.
+
+Note: All the information  provided here is based on the Official Documentation of Julia, any other source will be cited explicitely.
 
 
 \section{A Little Bit of Julia.}
@@ -184,238 +186,344 @@ You can get at any momment the number of available workers by running the follow
 
 
 
-\section{Search():}
-\label{Introduction:search}
+\chapter{Julia Parallelism}
+\label{JuliaPar:juliapar}\label{JuliaPar:julia-parallelism}\label{JuliaPar::doc}
+Julia provides a multiprocessing environment based on message passing to allow programs to run on multiple processes in separate memory domains at once.
+
+Julia’s implementation of message passing is different from other environments such as MPI {[}1{]}. Communication in Julia is generally “one-sided”, meaning that the programmer needs to explicitly manage only one process in a two-process operation. Furthermore, these operations typically do not look like “message send” and “message receive” but rather resemble higher-level operations like calls to user functions.
 
 
-The function \code{search()} takes up to three arguments.
-1. A ponymodel, the databse entity where you want to perform the search.
-2. The \code{search\_string}, what  you are looking for; and,
-3. The arguments, some additional options for more refined searching.
+\section{Low-level Parallelism}
+\label{JuliaPar:low-level-parallelism}
+Parallel programming in Julia is built on two primitives: remote references and remote calls. A remote reference is an object that can be used from any process to refer to an object stored on a particular process. A remote call is a request by one process to call a certain function on certain arguments on another (possibly the same) process.
 
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYG{n}{search}\PYG{p}{(}\PYG{n}{PonyModel}\PYG{p}{,} \PYG{l+s}{\PYGZdq{}}\PYG{l+s}{query}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,} \PYG{o}{*}\PYG{o}{*}\PYG{n}{kw}\PYG{p}{)}
-\end{Verbatim}
+These references, however,  are low-level. Therefore is not recomendable to use them unless is very necessary for specific things. Usually higher level functions would provide very efficient performance.
 
-For example, if  you want  the results to be sorted by some specific searcheable field,
-you have to indicate so, by adding the argument \code{sortedby="field"}.
-
-In this case the search results object would show as a score the value of the item you choose for sorting. Please note that in order for
-one field to be sortable, you must indicate it when you are registering
-the model. (Refer to the \emph{Usage} section above)
-
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{k+kn}{from} \PYG{n+nn}{app} \PYG{k+kn}{import} \PYG{o}{*}
-\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{k+kn}{from} \PYG{n+nn}{flask\PYGZus{}ponywhoosh} \PYG{k+kn}{import} \PYG{n}{search}
-\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{search}\PYG{p}{(}\PYG{n}{User}\PYG{p}{,}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{harol}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,} \PYG{n}{sortedby}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{age}\PYG{l+s}{\PYGZdq{}}\PYG{p}{)}
-\PYG{g+go}{\PYGZob{}\PYGZsq{}cant\PYGZus{}results\PYGZsq{}: 2,}
-\PYG{g+go}{ \PYGZsq{}facet\PYGZus{}names\PYGZsq{}: [],}
-\PYG{g+go}{ \PYGZsq{}matched\PYGZus{}terms\PYGZsq{}: \PYGZob{}\PYGZsq{}name\PYGZsq{}: [\PYGZsq{}felipe\PYGZsq{}]\PYGZcb{},}
-\PYG{g+go}{ \PYGZsq{}results\PYGZsq{}: [\PYGZob{}\PYGZsq{}docnum\PYGZsq{}: 4L,}
-\PYG{g+go}{              \PYGZsq{}rank\PYGZsq{}: 0,}
-\PYG{g+go}{              \PYGZsq{}pk\PYGZsq{} : 5,,}
-\PYG{g+go}{              \PYGZsq{}score\PYGZsq{}: \PYGZsq{}19\PYGZsq{}\PYGZcb{},}
-\PYG{g+go}{             \PYGZob{}\PYGZsq{}docnum\PYGZsq{}: 11L,}
-\PYG{g+go}{              \PYGZsq{}rank\PYGZsq{}: 1,}
-\PYG{g+go}{              \PYGZsq{}pk\PYGZsq{} : 12,,}
-\PYG{g+go}{              \PYGZsq{}score\PYGZsq{}: \PYGZsq{}19\PYGZsq{}\PYGZcb{}],}
-\PYG{g+go}{ \PYGZsq{}runtime\PYGZsq{}: 0.0012810230255126953\PYGZcb{}}
-\end{Verbatim}
-
-In synthesis, the options available are: \code{sortedby}, \code{scored}, \code{limit}, \code{optimize}, \code{reverse}. Which are widely described in the whoosh documentation.
-
-
-\section{The Attribute \texttt{\_pw\_.}}
-\label{Introduction:the-attribute-pw}
-There are some special features avalaible for models from the database. You just have to call the model \code{PonyModel.\_pw\_.}:
+Some basic functions are:
 \begin{itemize}
 \item {} 
-\code{add\_field}: This function is to add a desired field in the index.
+\emph{remotecall()}: Call a function asynchronously on the given arguments on the specified process. Returns a Future. Keyword arguments, if any, are passed through to func.
 
 \item {} 
-\code{charge\_documents}: This function let you charge an index from an  existing database.
+\emph{fetch()}: Waits and fetches a value from x depending on the type of x. Does not remove the item fetched:
 
 \item {} 
-\code{delete\_documents}: This function deletes all the documents stored in certain whoosh index.
+\emph{@spawn}: Creates a closure around an expression and runs it on an automatically-chosen process, returning a RemoteRef to the result.
 
 \item {} 
-\code{delete\_field}: This function works in case that you want to erase a determined field from a schema.
-
-\item {} 
-\code{update\_documents}: This function deletes all the documents and recharges them again.
-
-\item {} 
-\code{counts}: This function counts all the documents existing in an index.
+\emph{@spawnat}: Accepts two arguments, p(process) and an expression. A closure is created around the expression and run asynchronously on process p. Returns a Future to the result.
 
 \end{itemize}
 
 
-\section{Searching by field:}
-\label{Introduction:searching-by-field}
-{\color{red}\bfseries{}\textbar{}byfield\textbar{}}
-.. code:: python
-\begin{quote}
-
-search(PonyModel, query, field=''field\_name'')
-\end{quote}
-
-By default the function \code{search()} performs a multifield parser query, i.e.  you will be searching in all the fields you have declared when you registered the model. However, sometimes you would like to perform searching in just one or some of all the fields.
-For these reasons we implemented the following extra options: The first one is refered as \code{field} all you have to do is indicate in which field you want to search. The output would be a results object containing only the information found in that field. And \code{fields} where you should write a list with all the fields you want to search.
+\section{Examples:}
+\label{JuliaPar:examples}
+In the following example the remotecall function would be used to automatically run the function fill \emph{fill} which basically fills an array of 2 by 2 with numbers 3. Then we can fetch the result of that remote reference and store in a variable \emph{ref}. Then using \emph{@spawnat} we can specify where we want to implement certain function, in this case we want to multiply the array declared by 2, giving as a result a 2 by 2 array with numbers 6.
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{search}\PYG{p}{(}\PYG{n}{User}\PYG{p}{,}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{harol}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,}\PYG{n}{field}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{name}\PYG{l+s}{\PYGZdq{}}\PYG{p}{)}
-\PYG{g+go}{     \PYGZob{}\PYGZsq{}cant\PYGZus{}results\PYGZsq{}: 4,}
-\PYG{g+go}{     \PYGZsq{}facet\PYGZus{}names\PYGZsq{}: [],}
-\PYG{g+go}{     \PYGZsq{}matched\PYGZus{}terms\PYGZsq{}: \PYGZob{}\PYGZsq{}name\PYGZsq{}: [\PYGZsq{}harol\PYGZsq{}]\PYGZcb{},}
-\PYG{g+go}{     \PYGZsq{}results\PYGZsq{}: [\PYGZob{}\PYGZsq{}docnum\PYGZsq{}: 1L,}
-\PYG{g+go}{                  \PYGZsq{}pk\PYGZsq{}: u\PYGZsq{}7\PYGZsq{},}
-\PYG{g+go}{                  \PYGZsq{}rank\PYGZsq{}: 0,}
-\PYG{g+go}{                  \PYGZsq{}score\PYGZsq{}: 2.0296194171811583\PYGZcb{},}
-\PYG{g+go}{                 \PYGZob{}\PYGZsq{}docnum\PYGZsq{}: 5L,}
-\PYG{g+go}{                  \PYGZsq{}pk\PYGZsq{}: u\PYGZsq{}6\PYGZsq{},}
-\PYG{g+go}{                  \PYGZsq{}rank\PYGZsq{}: 1,}
-\PYG{g+go}{                  \PYGZsq{}score\PYGZsq{}: 2.0296194171811583\PYGZcb{},}
-\PYG{g+go}{                 \PYGZob{}\PYGZsq{}docnum\PYGZsq{}: 12L,}
-\PYG{g+go}{                  \PYGZsq{}pk\PYGZsq{}: u\PYGZsq{}13\PYGZsq{},}
-\PYG{g+go}{                  \PYGZsq{}rank\PYGZsq{}: 2,}
-\PYG{g+go}{                  \PYGZsq{}score\PYGZsq{}: 2.0296194171811583\PYGZcb{},}
-\PYG{g+go}{                 \PYGZob{}\PYGZsq{}docnum\PYGZsq{}: 13L,}
-\PYG{g+go}{                  \PYGZsq{}pk\PYGZsq{}: u\PYGZsq{}14\PYGZsq{},}
-\PYG{g+go}{                  \PYGZsq{}rank\PYGZsq{}: 3,}
-\PYG{g+go}{                  \PYGZsq{}score\PYGZsq{}: 2.0296194171811583\PYGZcb{}],}
-\PYG{g+go}{     \PYGZsq{}runtime\PYGZsq{}: 0.005359172821044922\PYGZcb{}}
-
-\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{search}\PYG{p}{(}\PYG{n}{Attribute}\PYG{p}{,}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{tejo}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,} \PYG{n}{fields}\PYG{o}{=}\PYG{p}{[}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{sport}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{name}\PYG{l+s}{\PYGZdq{}}\PYG{p}{]}\PYG{p}{)}
-\PYG{g+go}{    \PYGZob{}\PYGZsq{}cant\PYGZus{}results\PYGZsq{}: 4,}
-\PYG{g+go}{     \PYGZsq{}facet\PYGZus{}names\PYGZsq{}: [],}
-\PYG{g+go}{     \PYGZsq{}matched\PYGZus{}terms\PYGZsq{}: \PYGZob{}\PYGZsq{}name\PYGZsq{}: [\PYGZsq{}tejo\PYGZsq{}], \PYGZsq{}sport\PYGZsq{}: [\PYGZsq{}tejo\PYGZsq{}]\PYGZcb{},}
-\PYG{g+go}{     \PYGZsq{}results\PYGZsq{}: [\PYGZob{}\PYGZsq{}docnum\PYGZsq{}: 1L,}
-\PYG{g+go}{                  \PYGZsq{}pk\PYGZsq{}: u\PYGZsq{}7\PYGZsq{},}
-\PYG{g+go}{                  \PYGZsq{}rank\PYGZsq{}: 0,}
-\PYG{g+go}{                  \PYGZsq{}score\PYGZsq{}: 5.500610730717037\PYGZcb{},}
-\PYG{g+go}{                 \PYGZob{}\PYGZsq{}docnum\PYGZsq{}: 6L,}
-\PYG{g+go}{                  \PYGZsq{}pk\PYGZsq{}: u\PYGZsq{}1\PYGZsq{},}
-\PYG{g+go}{                  \PYGZsq{}rank\PYGZsq{}: 1,}
-\PYG{g+go}{                  \PYGZsq{}score\PYGZsq{}: 5.500610730717037\PYGZcb{}],}
-\PYG{g+go}{     \PYGZsq{}runtime\PYGZsq{}: 0.006212949752807617\PYGZcb{}}
+julia\PYGZgt{}ref=remotecall(2,fill,2,2,2)
+julia\PYGZgt{}fetch(ref)
+julia\PYGZgt{}ref2= @spawnat 1 2 .* fetch(ref)
+julia\PYGZgt{}fetch(ref2)
 \end{Verbatim}
 
 
-\section{add\_wildcards and something}
-\label{Introduction:add-wildcards-and-something}
-{\color{red}\bfseries{}\textbar{}wildcards\textbar{}}
+
+
+\section{High Level Parallelism}
+\label{JuliaPar:high-level-parallelism}\begin{itemize}
+\item {} 
+\emph{@parallel} (reducer) : Like the openmp \emph{\#pragma parallel for}
+This one is often used in for loops.  HOWEVER IS IMPORTANT TO DEFINE THE REDUCER PROPERLY!
+
+\item {} 
+\emph{pmaps()} : This is a parallel execution for more complicated parallel initializations.
+
+\item {} 
+\emph{SharedArray} : This structure is used for shared memory computations
+
+\item {} 
+\emph{@time} : This profile tool measure the time. Shown After the execution.
+
+\item {} 
+\emph{@elapsed} : This profile tool measure the time, but does show the output  time rather than the function.
+
+\item {} 
+\emph{@Allocated}: This profiling tool measure the allocations in memory.
+
+\end{itemize}
+
+
+\section{Examples:}
+\label{JuliaPar:id1}
+The following example would show why is important to be carefull when using \emph{@parallel} using it without declaring a shared array might cause the following problem:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\PYG{n}{search}\PYG{p}{(}\PYG{n}{PonyModel}\PYG{p}{,} \PYG{n}{query}\PYG{p}{,} \PYG{n}{add\PYGZus{}wildcards}\PYG{o}{=}\PYG{n+nb+bp}{True}\PYG{p}{)}
-\end{Verbatim}
-
-Whoosh  sets a wildcard \code{*},{}`{}`?{}`{}`,{}`{}`!{}`{}` by default to perform search for inexact terms, however sometimes  is desirable to search by exact terms instead. For this reason we added two more options: \code{add\_wildcards} and \code{something}.
-
-The option \emph{add\_wildcards} (by default False)  is a boolean argument that tells the searcher whether it should or not include wild cards. For example, if you want to search ``harol'' when \code{add\_wildcards=False}, and you search by ``har'' the results would be 0. If \code{add\_wildcards=True} , then ``har'' would be fair enough to get the result ``harol''  because searching was performed  using wild cards.
-
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{search}\PYG{p}{(}\PYG{n}{User}\PYG{p}{,} \PYG{l+s}{\PYGZdq{}}\PYG{l+s}{har}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,} \PYG{n}{add\PYGZus{}wildcards}\PYG{o}{=}\PYG{n+nb+bp}{False}\PYG{p}{)}
-\PYG{g+go}{  \PYGZob{}\PYGZsq{}cant\PYGZus{}results\PYGZsq{}: 0,}
-\PYG{g+go}{   \PYGZsq{}facet\PYGZus{}names\PYGZsq{}: [],}
-\PYG{g+go}{   \PYGZsq{}matched\PYGZus{}terms\PYGZsq{}: \PYGZob{}\PYGZcb{},}
-\PYG{g+go}{   \PYGZsq{}results\PYGZsq{}: [],}
-\PYG{g+go}{   \PYGZsq{}runtime\PYGZsq{}: 0.0003230571746826172}
-\PYG{g+go}{   \PYGZcb{}}
-
-\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{search}\PYG{p}{(}\PYG{n}{User}\PYG{p}{,} \PYG{l+s}{\PYGZdq{}}\PYG{l+s}{har}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,} \PYG{n}{add\PYGZus{}wildcards}\PYG{o}{=}\PYG{n+nb+bp}{True}\PYG{p}{)}
-\PYG{g+go}{  \PYGZob{}\PYGZsq{}cant\PYGZus{}results\PYGZsq{}: 4,}
-\PYG{g+go}{   \PYGZsq{}facet\PYGZus{}names\PYGZsq{}: [],}
-\PYG{g+go}{   \PYGZsq{}matched\PYGZus{}terms\PYGZsq{}: \PYGZob{}\PYGZsq{}name\PYGZsq{}: [\PYGZsq{}harol\PYGZsq{}]\PYGZcb{},}
-\PYG{g+go}{   \PYGZsq{}results\PYGZsq{}: [\PYGZob{}\PYGZsq{}docnum\PYGZsq{}: 1L,}
-\PYG{g+go}{                \PYGZsq{}pk\PYGZsq{}: u\PYGZsq{}7\PYGZsq{},}
-\PYG{g+go}{                \PYGZsq{}rank\PYGZsq{}: 0,}
-\PYG{g+go}{                \PYGZsq{}score\PYGZsq{}: 2.0296194171811583\PYGZcb{},}
-\PYG{g+go}{               \PYGZob{}\PYGZsq{}docnum\PYGZsq{}: 5L,}
-\PYG{g+go}{                \PYGZsq{}pk\PYGZsq{}: u\PYGZsq{}6\PYGZsq{},}
-\PYG{g+go}{                \PYGZsq{}rank\PYGZsq{}: 1,}
-\PYG{g+go}{                \PYGZsq{}score\PYGZsq{}: 2.0296194171811583\PYGZcb{},}
-\PYG{g+go}{               \PYGZob{}\PYGZsq{}docnum\PYGZsq{}: 12L,}
-\PYG{g+go}{                \PYGZsq{}pk\PYGZsq{}: u\PYGZsq{}13\PYGZsq{},}
-\PYG{g+go}{                \PYGZsq{}rank\PYGZsq{}: 2,}
-\PYG{g+go}{                \PYGZsq{}score\PYGZsq{}: 2.0296194171811583\PYGZcb{},}
-\PYG{g+go}{               \PYGZob{}\PYGZsq{}docnum\PYGZsq{}: 13L,}
-\PYG{g+go}{                \PYGZsq{}pk\PYGZsq{}: u\PYGZsq{}14\PYGZsq{},}
-\PYG{g+go}{                \PYGZsq{}rank\PYGZsq{}: 3,}
-\PYG{g+go}{                \PYGZsq{}score\PYGZsq{}: 2.0296194171811583\PYGZcb{}],}
-\PYG{g+go}{   \PYGZsq{}runtime\PYGZsq{}: 0.014926910400390625\PYGZcb{}}
-\end{Verbatim}
-
-The \code{something=True} option, would run first a search with
-\code{add\_wildcards=False} value, but in case results are empty it would automatically run a search adding wildcards to the result.
-
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{search}\PYG{p}{(}\PYG{n}{Attribute}\PYG{p}{,} \PYG{l+s}{\PYGZdq{}}\PYG{l+s}{tejo}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,} \PYG{n}{something} \PYG{o}{=} \PYG{n+nb+bp}{True}\PYG{p}{)}
-\PYG{g+go}{  \PYGZob{}\PYGZsq{}cant\PYGZus{}results\PYGZsq{}: 4,}
-\PYG{g+go}{   \PYGZsq{}facet\PYGZus{}names\PYGZsq{}: [],}
-\PYG{g+go}{   \PYGZsq{}matched\PYGZus{}terms\PYGZsq{}: \PYGZob{}\PYGZsq{}name\PYGZsq{}: [\PYGZsq{}tejo\PYGZsq{}], \PYGZsq{}sport\PYGZsq{}: [\PYGZsq{}tejo\PYGZsq{}]\PYGZcb{},}
-\PYG{g+go}{   \PYGZsq{}results\PYGZsq{}: [\PYGZob{}\PYGZsq{}docnum\PYGZsq{}: 1L,}
-\PYG{g+go}{                \PYGZsq{}pk\PYGZsq{}: u\PYGZsq{}7\PYGZsq{},}
-\PYG{g+go}{                \PYGZsq{}rank\PYGZsq{}: 0,}
-\PYG{g+go}{                \PYGZsq{}score\PYGZsq{}: 5.500610730717037\PYGZcb{},}
-\PYG{g+go}{               \PYGZob{}\PYGZsq{}docnum\PYGZsq{}: 6L,}
-\PYG{g+go}{                \PYGZsq{}pk\PYGZsq{}: u\PYGZsq{}1\PYGZsq{},}
-\PYG{g+go}{                \PYGZsq{}rank\PYGZsq{}: 1,}
-\PYG{g+go}{                \PYGZsq{}score\PYGZsq{}: 5.500610730717037\PYGZcb{}],}
-\PYG{g+go}{   \PYGZsq{}runtime\PYGZsq{}: 0.0036530494689941406\PYGZcb{}}
+a = zeros(10)
+@parallel for i=1:10
+        a[i] = i
+end
+fetch(a)
 \end{Verbatim}
 
 
-\section{The output dictionary}
-\label{Introduction:the-output-dictionary}
-The \code{search()} function returns a dictionary with selected information.
+
+This code did not work as expected because every process tried to write at the same time, causing an overwriting. To fix the problem you can create a Shared Array in the following way:
+
+
+
+Another more complicated example :
+
+Look at the jupyter notebook with the final presentation for more details.
+
+
+\chapter{Delta Stepping Algorithm}
+\label{Algorithm:delta-stepping-algorithm}\label{Algorithm::doc}\label{Algorithm:algorithm}
+During this work I implemented on Julia  The delta stepping algorithm proppossed by {[}Meyer and Sanders{]} in 1998. This implementation split the Dijikstra algorithm  in phases so that each phase can be implemented on parallel as well I followed {[}Pintarelli et.all{]} In order to get the idea of each part of the algorithm and the propper way to implemented.
+
+The purpouse of this algorithm is to solve the so called SSSP problem (Single Source Shortest Path Problem). That can be stated as follows:
+
+Given a weighted graph G=(V,E,c) where:
 \begin{itemize}
 \item {} 
-\code{cant\_results}: is the total number of documents collected by the searcher.
+V is a Set of vertices or nodes
 
 \item {} 
-\code{facet\_names}: is useful with the option \code{groupedby}, because it returns the item used to group the results.
+E is a set of edges, i.e., ordered pairs of nodes
 
 \item {} 
-\code{matched\_terms}: is a dictionary that saves the searcheable field and the match given by the query.
-
-\item {} 
-\code{runtime}: how much time the searcher took to find it.
-
-\item {} 
-\code{results}: is  a dictionary's list for the individual results. i.e. a dictionary for every single result, containing:
-\begin{itemize}
-\item {} 
-`rank': the position of the result,
-
-\item {} 
-`result': indicating the primary key and the correspond value of the item,
-
-\item {} 
-`score': the score for the item in the search, and
-
-\item {} 
-`pk': the primary key Or the sets of primary keys.
+c cost or weight function \$c: E rightarrow mathbb\{N\}\$,
 
 \end{itemize}
 
-\end{itemize}
+Find a minimal weight path from one chose node \$s in V\$ called the \textbf{source node}, to all other nodes in V. We say that the nodes \$v,w in V\$ are neighbours if \$(v,w) in E\$, i.e., if there exists and edge between them.
 
 
-\section{use\_dict:}
-\label{Introduction:use-dict}
+\section{The pseudocode:}
+\label{Algorithm:the-pseudocode}
 
-\chapter{Indices and tables}
-\label{index:indices-and-tables}\begin{itemize}
-\item {} 
-\DUspan{xref,std,std-ref}{genindex}
 
-\item {} 
-\DUspan{xref,std,std-ref}{modindex}
 
-\item {} 
-\DUspan{xref,std,std-ref}{search}
 
-\end{itemize}
+
+\section{The implementation:}
+\label{Algorithm:the-implementation}
+Here is the code propposed for the first algorithm:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+    function Deltastep(list,s,delta)
+    C=Dict()
+    V=Set()
+    tent=Dict()
+    B=Dict\PYGZob{}Any,Set\PYGZcb{}()
+    E=Set()
+    heavy=Dict()
+    light=Dict()
+    Req=[]
+    pred=Dict()
+    for item in list
+        C[item[1],item[2]]=item[3]
+        push!(V,item[1])
+        push!(V,item[2])
+        push!(E,[item[1],item[2]])
+        heavy[item[1]]=[]
+        heavy[item[2]]=[]
+        light[item[1]]=[]
+        light[item[2]]=[]
+        tent[item[1]]=10000000000000
+        tent[item[2]]=10000000000000
+        pred[item[2]]=10000000000000
+    end
+    \PYGZsh{}println(\PYGZdq{}C=\PYGZdl{}C\PYGZdq{})
+    for e in E
+        v=e[1]
+        w=e[2]
+        if C[v,w]\PYGZgt{}delta
+            push!(heavy[v],e)
+        else
+            push!(light[v],e)
+        end
+    end
+    \PYGZsh{}println(\PYGZdq{}Heavy: \PYGZdl{}heavy\PYGZdq{})
+    \PYGZsh{}println(\PYGZdq{}Light: \PYGZdl{}light\PYGZdq{})
+    \PYGZsh{}println(\PYGZdq{}E=\PYGZdl{}E\PYGZdq{})
+    relax(s,0,delta,B,tent,pred,1000000000)
+    i=0
+    while isempty(B)==false
+        println(\PYGZdq{}B=\PYGZdl{}B\PYGZdq{})
+        println(\PYGZdq{}tent=\PYGZdl{}tent\PYGZdq{})
+        \PYGZsh{}Processing vertices from B[i]
+        if haskey(B,i)==true
+            S=Set()
+            \PYGZsh{}Relax  recursively all light edges while they stay in B[i]
+            while isempty(B[i])==false
+                \PYGZsh{}Push to Req all light      edges from      vertices in B[i]
+                Req=[]
+                for v in B[i]
+                    println(\PYGZdq{}v=\PYGZdl{}v\PYGZdq{})
+                    for e in light[v]
+                        println(\PYGZdq{}e  =\PYGZdl{}e\PYGZdq{})
+                        push!(Req,[e[2],tent[v]+C[e[1]      ,e[2]],v])
+                    end
+                end
+                \PYGZsh{}Update S
+                union!(S,B[i])
+                B[i]=Set()
+                \PYGZsh{}Relax all  Req edges
+                for r in Req
+                    println(\PYGZdq{}r=\PYGZdl{}r\PYGZdq{})
+                    relax(r[1],r[2],delta,B,ten     t,pred,r[       3])
+                end
+            end
+            \PYGZsh{}Relax all heavy edges of vertices in S
+            Req=[]
+            delete!(B,i)
+            for v in S
+                for e in heavy[v]
+                    push!(Req,[e[2],tent[v]+C[e[1],e[2]],v  ])
+                end
+            end
+            for r in Req
+                relax(r[1],r[2],delta,B,tent,pred,r[3])
+            end
+        end
+        i=i+1
+    end
+println(\PYGZdq{}This is the answer: \PYGZdl{}tent\PYGZdq{})
+return tent,pred
+    end
+\end{Verbatim}
+
+The second algorithm was implemented in the following way:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+function relax(w,d,delta,B,tent,pred,v)
+    \PYGZsh{} println(\PYGZdq{}w : \PYGZdl{}w\PYGZdq{})
+    if d\PYGZlt{}tent[w]
+        old\PYGZus{}i=floor(tent[w]/delta)
+        tent[w]=d
+        if (haskey(B,old\PYGZus{}i)==true)
+            delete!(B[old\PYGZus{}i],w)
+        else
+            \PYGZsh{} println(\PYGZdq{}Warning: In relax (w=\PYGZdl{}w,d=\PYGZdl{}d,delta=\PYGZdl{}delta), B[old\PYGZus{}i=\PYGZdl{}old\PYGZus{}i] not found\PYGZdq{})
+        end
+        \PYGZsh{}Add w to new bin and update its tent
+        new\PYGZus{}i=floor(d/delta)
+        if (haskey(B,new\PYGZus{}i)==false)
+            B[new\PYGZus{}i]=Set()
+            \PYGZsh{} println(\PYGZdq{}Warning: In relax (w=\PYGZdl{}w,d=\PYGZdl{}d,delta=\PYGZdl{}delta), allocated B[fld=\PYGZdl{}new\PYGZus{}i].\PYGZdq{})
+        end
+        push!(B[new\PYGZus{}i],w)
+        tent[w]=d
+        if (haskey(pred,w)==false)
+            pred[w]=()
+            pred[w]=v
+            \PYGZsh{} println(\PYGZdq{}Warning: In relax (w=\PYGZdl{}w,d=\PYGZdl{}d,delta=\PYGZdl{}delta), allocated B[fld=\PYGZdl{}new\PYGZus{}i].\PYGZdq{})
+        else
+            pred[w]=v
+        end
+        \PYGZsh{} println(\PYGZdq{}The previous node visited was: \PYGZdl{}pred\PYGZdq{})
+    end
+end
+\end{Verbatim}
+
+
+\section{Path Function}
+\label{Algorithm:path-function}
+Some other functions were implemented. The following one, was implemented to retrieve the Path
+
+\begin{Verbatim}[commandchars=\\\{\}]
+function path(pred,w)
+  v=w
+  path = []
+  while v\PYGZlt{}1000000000
+        push!(path,v)
+        \PYGZsh{}println(\PYGZdq{}\PYGZdl{}path\PYGZdq{})
+        v = pred[v]
+  end
+  return reverse(path)
+end
+\end{Verbatim}
+
+
+\section{Example:}
+\label{Algorithm:example}
+The following is an example of how to use the algorithm.
+
+Let us start by setting up the graph. To do so let us define the following array:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+graph=Array\PYGZob{}Int64\PYGZcb{}[]
+push!(graph,[1,2,1])
+push!(graph,[2,3,1])
+push!(graph,[3,1,4])
+push!(graph,[3,4,2])
+push!(graph,[4,2,5])
+\end{Verbatim}
+
+
+
+Now we have a directed graph. Let us say we want to know the shortest path to each node from the vertice 2, we will do something like:
+
+This is a simple code that runs over the graph, starting from the node 2 and with a delta of 1.
+
+
+
+As is shown. It is obvious that going from node 2 to 2 has to have cost 0. The other nodes can be extracted very easy too.
+
+
+\chapter{Images}
+\label{Images:images}\label{Images::doc}\label{Images:id1}
+Julia language is a high-level, high-performance dynamic programming language for technical computing. Between several other features  it provides a sophisticated compiler and distributed parallel execution, that allows the user to code sophisticated applications. Given the novelty of the language, is hard to find documentation that help the beginners and new learners to understand the core concepts and advantages of using Julia. For this reason, and mostly as a new learner, I provide this work that show by example some usages and advantages of using Julia .
+
+The example I will be refering to is the Delta-stepping algorithm. Which is a clever proposition developed by  Madduri et. all. In their paper Parallel Shortest Path Algorihtm for Solving Large Scale Instances; along with the one by M. Kranjcevic \$Delta\$-Stepping Algorithm for Shared Memories Architectures.
+
+This algorithm will be specially used  to find the contour of an image. Using the package \href{https://github.com/timholy/Images.jl}{Images} I converted the image to gray scale and calculate the gradient to compute a function cost. Later I  set a directed graph where the pixels where the nodes and the cost to go to a neighbor pixel with different color was high, then using the delta-stepping algorithm I can find the shortest path, which was also the contour.
+
+A parallel implementation in Julia of this algorithm is propposed. For this implementation I ran several test to evaluate it's performance. In particular three images were selected.
+
+There are many changes that still have to be done. In the next version, I will be updating the implementation changing the buckets from a dictionary of sets(not very efficient) to a shared list (to provide better parallelism). As well I will be working on the tutorials so that clear and nicer examples can be shown.
+
+Note: All the information  provided here is based on the Official Documentation of Julia, any other source will be cited explicitely.
+
+
+\section{A Little Bit of Julia.}
+\label{Images:a-little-bit-of-julia}
+Instalation might be very tricky. However for learning I suggest you to download the binary extension that can be found \href{http://julialang.org/downloads/}{Here}
+
+When you have it go to the folder \emph{julia/bin} and simply execute \emph{Julia}. Like:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n}{julia}
+\end{Verbatim}
+
+
+
+This initialization would start julia by default with one process. If you want to start with more processes you need to specify it with the following command (It makes sense when -p \# correlates with the number of processors on your machine). For example on mine two cores.
+
+\begin{Verbatim}[commandchars=\\\{\}]
+julia \PYGZhy{}p 2
+\end{Verbatim}
+
+
+
+In case you forget to start with this command, you can add more procs from the julia command line:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n}{addprocs}\PYG{p}{(}\PYG{p}{)}
+\end{Verbatim}
+
+
+
+Which will add all the available processors by default, but you can specify too just puting inside the parenthesis as many process as cores has your machine.
+
+You can get at any momment the number of available workers by running the following code:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n}{nprocs}\PYG{p}{(}\PYG{p}{)}
+\end{Verbatim}
+
+
 
 
 

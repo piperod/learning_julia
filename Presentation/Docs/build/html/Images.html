@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Introduction &mdash; Delta Stepping Algorithm in Parallel : A beginner approach. 0.0.1 documentation</title>
+    <title>Images &mdash; Delta Stepping Algorithm in Parallel : A beginner approach. 0.0.1 documentation</title>
     
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -25,7 +25,7 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="top" title="Delta Stepping Algorithm in Parallel : A beginner approach. 0.0.1 documentation" href="index.html" />
-    <link rel="prev" title="Welcome to Delta Stepping Algorithm in Julia : A beginner approach.’s Documentation" href="index.html" />
+    <link rel="prev" title="Delta Stepping Algorithm" href="Algorithm.html" />
    
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
@@ -38,8 +38,8 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="introduction">
-<span id="id1"></span><h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="images">
+<span id="id1"></span><h1>Images<a class="headerlink" href="#images" title="Permalink to this headline">¶</a></h1>
 <p>Julia language is a high-level, high-performance dynamic programming language for technical computing. Between several other features  it provides a sophisticated compiler and distributed parallel execution, that allows the user to code sophisticated applications. Given the novelty of the language, is hard to find documentation that help the beginners and new learners to understand the core concepts and advantages of using Julia. For this reason, and mostly as a new learner, I provide this work that show by example some usages and advantages of using <a class="reference external" href="julialang.com/docs">Julia</a> .</p>
 <p>The example I will be refering to is the Delta-stepping algorithm. Which is a clever proposition developed by  Madduri et. all. In their paper Parallel Shortest Path Algorihtm for Solving Large Scale Instances; along with the one by M. Kranjcevic $Delta$-Stepping Algorithm for Shared Memories Architectures.</p>
 <p>This algorithm will be specially used  to find the contour of an image. Using the package <a class="reference external" href="https://github.com/timholy/Images.jl">Images</a> I converted the image to gray scale and calculate the gradient to compute a function cost. Later I  set a directed graph where the pixels where the nodes and the cost to go to a neighbor pixel with different color was high, then using the delta-stepping algorithm I can find the shortest path, which was also the contour.</p>
@@ -81,7 +81,7 @@
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Introduction</a><ul>
+<li><a class="reference internal" href="#">Images</a><ul>
 <li><a class="reference internal" href="#a-little-bit-of-julia">A Little Bit of Julia.</a></li>
 </ul>
 </li>
@@ -90,14 +90,14 @@
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="index.html" title="previous chapter">Welcome to Delta Stepping Algorithm in Julia : A beginner approach.&#8217;s Documentation</a></li>
+      <li>Previous: <a href="Algorithm.html" title="previous chapter">Delta Stepping Algorithm</a></li>
   </ul></li>
 </ul>
 </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="_sources/Introduction.txt"
+      <li><a href="_sources/Images.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
@@ -126,7 +126,7 @@
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
       
       |
-      <a href="_sources/Introduction.txt"
+      <a href="_sources/Images.txt"
           rel="nofollow">Page source</a>
     </div>
 
