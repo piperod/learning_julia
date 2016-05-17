@@ -134,68 +134,59 @@ Contents:
 
 \chapter{Introduction}
 \label{Introduction:introduction}\label{Introduction:welcome-to-delta-stepping-algorithm-in-parallel-a-beginner-approach-s-documentation}\label{Introduction::doc}\label{Introduction:id1}
-After you have registered the indexes where you want to store the searcheables. You can perform some testing by entering to the shell of your aplication:
+Julia language is a high-level, high-performance dynamic programming language for technical computing. Between several other features  it provides a sophisticated compiler and distributed parallel execution, that allows the user to code sophisticated applications. Given the novelty of the language, is hard to find documentation that help the beginners and new learners to understand the core concepts and advantages of using Julia. For this reason, and mostly as a new learner, I provide this work that show by example some usages and advantages of using Julia .
+
+The example I will be refering to is the Delta-stepping algorithm. Which is a clever proposition developed by  Madduri et. all. In their paper Parallel Shortest Path Algorihtm for Solving Large Scale Instances; along with the one by M. Kranjcevic \$Delta\$-Stepping Algorithm for Shared Memories Architectures.
+
+This algorithm will be specially used  to find the contour of an image. Using the package \href{https://github.com/timholy/Images.jl}{Images} I converted the image to gray scale and calculate the gradient to compute a function cost. Later I  set a directed graph where the pixels where the nodes and the cost to go to a neighbor pixel with different color was high, then using the delta-stepping algorithm I can find the shortest path, which was also the contour.
+
+A parallel implementation in Julia of this algorithm is propposed. For this implementation I ran several test to evaluate it's performance. In particular three images were selected.
+
+There are many changes that still have to be done. In the next version, I will be updating the implementation changing the buckets from a dictionary of sets(not very efficient) to a shared list (to provide better parallelism). As well I will be working on the tutorials so that clear and nicer examples can be shown.
+
+
+\section{A Little Bit of Julia.}
+\label{Introduction:a-little-bit-of-julia}
+Instalation might be very tricky. However for learning I suggest you to download the binary extension that can be found \href{http://julialang.org/downloads/}{Here}
+
+When you have it go to the folder \emph{julia/bin} and simply execute \emph{Julia}. Like:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\PYGZdl{} python app.py shell
+\PYG{n}{julia}
 \end{Verbatim}
 
-However if you'd rather  prefer to ``see'' the results, you may access to the route `/ponywhoosh/' available when you run the server.
 
 
-\section{Testing on the shell.}
-\label{Introduction:testing-on-the-shell}
-\href{https://pypi.python.org/pypi/Flask-PonyWhoosh}{}
-.. code :: python
-\begin{quote}
-
-PonyModel.search(query, {\color{red}\bfseries{}**}kwargs)
-\end{quote}
-
-There are several options to perform a search with \code{flask\_ponywhoosh}. For instance, to execute a  simple search, choose the entity where you want to perform the search and then  try
-something like the following code over a view function, or even from the shell,
+This initialization would start julia by default with one process. If you want to start with more processes you need to specify it with the following command (It makes sense when -p \# correlates with the number of processors on your machine). For example on mine two cores.
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{k+kn}{from} \PYG{n+nn}{app} \PYG{k+kn}{import} \PYG{o}{*}
-\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{User}\PYG{o}{.}\PYG{n}{search}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{felipe}\PYG{l+s}{\PYGZdq{}}\PYG{p}{)}
-\PYG{g+go}{\PYGZob{}\PYGZsq{}cant\PYGZus{}results\PYGZsq{}: 2,}
-\PYG{g+go}{ \PYGZsq{}facet\PYGZus{}names\PYGZsq{}: [],}
-\PYG{g+go}{ \PYGZsq{}matched\PYGZus{}terms\PYGZsq{}: \PYGZob{}\PYGZsq{}name\PYGZsq{}: [\PYGZsq{}felipe\PYGZsq{}]\PYGZcb{},}
-\PYG{g+go}{ \PYGZsq{}results\PYGZsq{}: [\PYGZob{}\PYGZsq{}docnum\PYGZsq{}: 4L,}
-\PYG{g+go}{              \PYGZsq{}rank\PYGZsq{}: 0,}
-\PYG{g+go}{              \PYGZsq{}pk\PYGZsq{}: 5,}
-\PYG{g+go}{              \PYGZsq{}score\PYGZsq{}: 2.540445040947149\PYGZcb{},}
-\PYG{g+go}{             \PYGZob{}\PYGZsq{}docnum\PYGZsq{}: 11L,}
-\PYG{g+go}{              \PYGZsq{}rank\PYGZsq{}: 1,}
-\PYG{g+go}{              \PYGZsq{}pk\PYGZsq{}: 12,}
-\PYG{g+go}{              \PYGZsq{}score\PYGZsq{}: 2.540445040947149\PYGZcb{}],}
-\PYG{g+go}{ \PYGZsq{}runtime\PYGZsq{}: 0.001981973648071289\PYGZcb{}}
+julia \PYGZhy{}p 2
 \end{Verbatim}
 
-If you would prefer, you may use the function \code{search()},  which will run the same function but is quite more handy when writing
+
+
+In case you forget to start with this command, you can add more procs from the julia command line:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{k+kn}{from} \PYG{n+nn}{flask\PYGZus{}ponywhoosh} \PYG{k+kn}{import} \PYG{n}{search}
-\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{k+kn}{from} \PYG{n+nn}{app} \PYG{k+kn}{import} \PYG{o}{*}
-\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{search}\PYG{p}{(}\PYG{n}{User}\PYG{p}{,}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{felipe}\PYG{l+s}{\PYGZdq{}}\PYG{p}{)}
-\PYG{g+go}{\PYGZob{}\PYGZsq{}cant\PYGZus{}results\PYGZsq{}: 2,}
-\PYG{g+go}{ \PYGZsq{}facet\PYGZus{}names\PYGZsq{}: [],}
-\PYG{g+go}{ \PYGZsq{}matched\PYGZus{}terms\PYGZsq{}: \PYGZob{}\PYGZsq{}name\PYGZsq{}: [\PYGZsq{}felipe\PYGZsq{}]\PYGZcb{},}
-\PYG{g+go}{ \PYGZsq{}results\PYGZsq{}: [\PYGZob{}\PYGZsq{}docnum\PYGZsq{}: 4L,}
-\PYG{g+go}{              \PYGZsq{}rank\PYGZsq{}: 0,}
-\PYG{g+go}{              \PYGZsq{}pk\PYGZsq{} : 5,}
-\PYG{g+go}{              \PYGZsq{}score\PYGZsq{}: 2.540445040947149\PYGZcb{},}
-\PYG{g+go}{             \PYGZob{}\PYGZsq{}docnum\PYGZsq{}: 11L,}
-\PYG{g+go}{              \PYGZsq{}rank\PYGZsq{}: 1,}
-\PYG{g+go}{              \PYGZsq{}pk\PYGZsq{} : 12,}
-\PYG{g+go}{              \PYGZsq{}score\PYGZsq{}: 2.540445040947149\PYGZcb{}],}
-\PYG{g+go}{ \PYGZsq{}runtime\PYGZsq{}: 0.001981973648071289\PYGZcb{}}
+\PYG{n}{addprocs}\PYG{p}{(}\PYG{p}{)}
 \end{Verbatim}
+
+
+
+Which will add all the available processors by default, but you can specify too just puting inside the parenthesis as many process as cores has your machine.
+
+You can get at any momment the number of available workers by running the following code:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n}{nprocs}\PYG{p}{(}\PYG{p}{)}
+\end{Verbatim}
+
+
 
 
 \section{Search():}
 \label{Introduction:search}
-\href{https://pypi.python.org/pypi/Flask-PonyWhoosh}{}
+
 
 The function \code{search()} takes up to three arguments.
 1. A ponymodel, the databse entity where you want to perform the search.
@@ -261,7 +252,7 @@ There are some special features avalaible for models from the database. You just
 
 \section{Searching by field:}
 \label{Introduction:searching-by-field}
-\href{https://pypi.python.org/pypi/Flask-PonyWhoosh}{}
+{\color{red}\bfseries{}\textbar{}byfield\textbar{}}
 .. code:: python
 \begin{quote}
 
@@ -312,7 +303,7 @@ For these reasons we implemented the following extra options: The first one is r
 
 \section{add\_wildcards and something}
 \label{Introduction:add-wildcards-and-something}
-\href{https://pypi.python.org/pypi/Flask-PonyWhoosh}{}
+{\color{red}\bfseries{}\textbar{}wildcards\textbar{}}
 
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{n}{search}\PYG{p}{(}\PYG{n}{PonyModel}\PYG{p}{,} \PYG{n}{query}\PYG{p}{,} \PYG{n}{add\PYGZus{}wildcards}\PYG{o}{=}\PYG{n+nb+bp}{True}\PYG{p}{)}
@@ -412,10 +403,6 @@ The \code{search()} function returns a dictionary with selected information.
 
 \section{use\_dict:}
 \label{Introduction:use-dict}
-\href{https://pypi.python.org/pypi/Flask-PonyWhoosh}{}
-
-If you want that the  items look like a list rather than a dictionary. You can use the option use\_dict: this option by default is set True. However if you choose false, results will look something like (`field', `result')
-
 
 \chapter{Indices and tables}
 \label{index:indices-and-tables}\begin{itemize}
