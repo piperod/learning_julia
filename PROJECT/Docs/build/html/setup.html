@@ -1,0 +1,162 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Set Up the graph. &mdash; Delta Stepping Algorithm in Parallel : A beginner approach. 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="Delta Stepping Algorithm in Parallel : A beginner approach. 0.0.1 documentation" href="index.html" />
+    <link rel="next" title="Profiling the Performance:" href="profiling.html" />
+    <link rel="prev" title="Images" href="Images.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="set-up-the-graph">
+<span id="setup"></span><h1>Set Up the graph.<a class="headerlink" href="#set-up-the-graph" title="Permalink to this headline">¶</a></h1>
+<p>In the last section I explained how to extract information from a picture and more important how to transform that information in order to make it relevant for our purposes.</p>
+<p>In this section I will explain how I build the graph out of the image.</p>
+<p>The directed graph we are trying to set is described by a list of items where each item has the following items (V1,V2, C) where V1 is connected with V2 (in that direction) and C is the cost of going from V1 to V2.</p>
+<div class="section" id="pixels-vertex-and-edges">
+<h2>Pixels, vertex and edges<a class="headerlink" href="#pixels-vertex-and-edges" title="Permalink to this headline">¶</a></h2>
+<p>The nodes of our graph would be given by each pixel of the image. In future releases we will reduce significatively the number of pixels to describe a picture. Right now for the rose example we will be dealing with around 200.000 nodes. Heavy enough to make our algorithm to go for around a minute before getting the answer. In the future the idea is reduce those nodes to the half using zooming or different staff.</p>
+<p>The edges are therefore a bigger problem. Each pixel has eight neigbours (I considered up,down, left, right and the corners), so there are 8 edges defined for each pixel. Setting the set of edges from our graph to around a million edges! This is just a huge ammount of information. In the following releases this will be  reduced significatively, because this causes a poor performance of the application.</p>
+</div>
+<div class="section" id="cost-function">
+<h2>Cost function<a class="headerlink" href="#cost-function" title="Permalink to this headline">¶</a></h2>
+<p>As explained before the reciprocus of the gradient would be used to calculate the cost. Actually the cost would be given by the gradient in the ending pixel itself.</p>
+</div>
+<div class="section" id="setup-function">
+<h2>Setup function<a class="headerlink" href="#setup-function" title="Permalink to this headline">¶</a></h2>
+<p>The following code is used to setup the graph. The input is an image and the output is a graph in the structure previously explained.</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>    using Images, Colors, FixedPointNumbers, ImageView
+    function setup(A)
+            x,y = size(A)
+            list=Array{Float64}[]
+            img=convert(Image{Gray{Ufixed8}}, A)
+xx,yy=imgradients(img)
+c=(sqrt(xx.^2+yy.^2))
+cost=1./(c.+1)
+            for i in x+2:length(A)-(x+1)
+            edge=[i,i+1,cost[i+1]]
+            push!(list,edge)
+            edge=[i,i-1,cost[i-1]]
+            push!(list,edge)
+            edge=[i,i-x,cost[i-x-1]]
+            push!(list,edge)
+            edge=[i,i+x,cost[i+x]]
+            push!(list,edge)
+            edge=[i,i-x-1,cost[i-x-1]]
+            push!(list,edge)
+            edge=[i,i-x+1,cost[i-x+1]]
+            push!(list,edge)
+            edge=[i,i+x-1,cost[i+x-1]]
+            push!(list,edge)
+            edge=[i,i+x+1,cost[i+x+1]]
+            push!(list,edge)
+            end
+            return list
+    end
+</pre></div>
+</div>
+</div>
+<div class="section" id="example">
+<h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
+<p>The following example ran over the rose picture would show the bast number of edges created by this approach. This would change in future releases.</p>
+<p><img alt="setup" src="_images/setup.gif" /></p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Set Up the graph.</a><ul>
+<li><a class="reference internal" href="#pixels-vertex-and-edges">Pixels, vertex and edges</a></li>
+<li><a class="reference internal" href="#cost-function">Cost function</a></li>
+<li><a class="reference internal" href="#setup-function">Setup function</a></li>
+<li><a class="reference internal" href="#example">Example</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="Images.html" title="previous chapter">Images</a></li>
+      <li>Next: <a href="profiling.html" title="next chapter">Profiling the Performance:</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/setup.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Ivan Felipe Rodriguez Rodriguez.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
+      
+      |
+      <a href="_sources/setup.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,31 @@
+\select@language {english}
+\contentsline {chapter}{\numberline {1}Introduction}{3}{chapter.1}
+\contentsline {section}{\numberline {1.1}A Little Bit of Julia.}{3}{section.1.1}
+\contentsline {chapter}{\numberline {2}Julia Parallelism}{5}{chapter.2}
+\contentsline {section}{\numberline {2.1}Low-level Parallelism}{5}{section.2.1}
+\contentsline {section}{\numberline {2.2}Examples:}{5}{section.2.2}
+\contentsline {section}{\numberline {2.3}High Level Parallelism}{6}{section.2.3}
+\contentsline {section}{\numberline {2.4}Examples:}{6}{section.2.4}
+\contentsline {chapter}{\numberline {3}Delta Stepping Algorithm}{9}{chapter.3}
+\contentsline {section}{\numberline {3.1}The pseudocode:}{10}{section.3.1}
+\contentsline {section}{\numberline {3.2}The implementation:}{11}{section.3.2}
+\contentsline {section}{\numberline {3.3}Path Function}{13}{section.3.3}
+\contentsline {section}{\numberline {3.4}Example:}{13}{section.3.4}
+\contentsline {subsection}{\numberline {3.4.1}Parallel Delta-Stepping}{14}{subsection.3.4.1}
+\contentsline {section}{\numberline {3.5}Some considerations}{15}{section.3.5}
+\contentsline {chapter}{\numberline {4}Images}{17}{chapter.4}
+\contentsline {section}{\numberline {4.1}GrayScale}{18}{section.4.1}
+\contentsline {section}{\numberline {4.2}Gradient}{18}{section.4.2}
+\contentsline {section}{\numberline {4.3}Cost}{19}{section.4.3}
+\contentsline {chapter}{\numberline {5}Set Up the graph.}{21}{chapter.5}
+\contentsline {section}{\numberline {5.1}Pixels, vertex and edges}{21}{section.5.1}
+\contentsline {section}{\numberline {5.2}Cost function}{21}{section.5.2}
+\contentsline {section}{\numberline {5.3}Setup function}{21}{section.5.3}
+\contentsline {section}{\numberline {5.4}Example}{21}{section.5.4}
+\contentsline {chapter}{\numberline {6}Profiling the Performance:}{23}{chapter.6}
+\contentsline {section}{\numberline {6.1}Code for serial}{23}{section.6.1}
+\contentsline {section}{\numberline {6.2}Code for parallel}{23}{section.6.2}
+\contentsline {chapter}{\numberline {7}Results}{25}{chapter.7}
+\contentsline {chapter}{\numberline {8}Analysis}{27}{chapter.8}
+\contentsline {chapter}{\numberline {9}Demo}{29}{chapter.9}
+\contentsline {chapter}{\numberline {10}Quick Reference}{31}{chapter.10}

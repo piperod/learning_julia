@@ -49,13 +49,13 @@ julia&gt; img=load(&quot;rose.png&quot;)
 </pre></div>
 </div>
 <p>Now we can play with  and &#8220;see&#8221; the data:</p>
-<p><img alt="load" src="_images/load.gif" /></p>
+<p><img alt="load" src="../../Imagenes/load.gif" /></p>
 <p>If you want to see the image you can use the following command:</p>
 <div class="code bash highlight-python"><div class="highlight"><pre><span class="n">julia</span><span class="o">&gt;</span>  <span class="n">view</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>That would open an extra window showing</p>
-<p><img alt="rose" src="_images/rose.png" /></p>
+<p><img alt="rose" src="../../Imagenes/rose.png" /></p>
 <div class="section" id="grayscale">
 <h2>GrayScale<a class="headerlink" href="#grayscale" title="Permalink to this headline">¶</a></h2>
 <p>Now we can convert this image to gray scale, so it is easy to handle for calculations.</p>
@@ -69,7 +69,7 @@ julia&gt; c=(sqrt(xx.^2+yy.^2))
 julia&gt; view(c)
 </pre></div>
 </div>
-<p><img alt="gradient" src="_images/gradient.png" /></p>
+<p><img alt="gradient" src="../../Imagenes/gradient.png" /></p>
 <p>Now we need to find a way to reduce the cost of the middle of the images but make larger the cost of the border. To so I ran the following code:</p>
 </div>
 <div class="section" id="cost">
@@ -78,9 +78,9 @@ julia&gt; view(c)
 julia&gt; view(cost)
 </pre></div>
 </div>
-<p><img alt="cost" src="_images/cost.png" /></p>
+<p><img alt="cost" src="../../Imagenes/cost.png" /></p>
 <p>Now if you go and see the cost of the borders they will be smaller thant those outside (they will be around 1). Therefore we will have the way to form the shortest path as the border of the image.</p>
-<p><img alt="costdemo" src="_images/costvi.gif" /></p>
+<p><img alt="costdemo" src="../../Imagenes/costvi.gif" /></p>
 <p>Now we are ready to set up the graph.</p>
 </div>
 </div>

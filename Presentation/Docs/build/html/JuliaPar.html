@@ -64,7 +64,7 @@ julia&gt;ref2= @spawnat 1 2 .* fetch(ref)
 julia&gt;fetch(ref2)
 </pre></div>
 </div>
-<p><img alt="remotecall" src="_images/remotecall.gif" /></p>
+<p><img alt="remotecall" src="../../Imagenes/remotecall.gif" /></p>
 </div>
 <div class="section" id="high-level-parallelism">
 <h2>High Level Parallelism<a class="headerlink" href="#high-level-parallelism" title="Permalink to this headline">¶</a></h2>
@@ -88,9 +88,9 @@ end
 fetch(a)
 </pre></div>
 </div>
-<p><img alt="parallelfor" src="_images/parallel.gif" /></p>
+<p><img alt="parallelfor" src="../../Imagenes/parallel.gif" /></p>
 <p>This code did not work as expected because every process tried to write at the same time, causing an overwriting. To fix the problem you can create a Shared Array in the following way:</p>
-<p><img alt="shared" src="_images/shared.gif" /></p>
+<p><img alt="shared" src="../../Imagenes/shared.gif" /></p>
 <p>Another more complicated example :</p>
 <p>Look at the jupyter notebook with the final presentation for more details.</p>
 </div>

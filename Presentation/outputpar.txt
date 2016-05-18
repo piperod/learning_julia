@@ -1,6 +1,0 @@
-Deltastep : 10 Time Elapsed   74.842635872 Memory Allocations : 12186714795 
-Deltastep : 50 Time Elapsed   75.383129236 Memory Allocations : 12260949995 
-Deltastep : 100 Time Elapsed  68.089972613 Memory Allocations : 12335408123 
-Deltastep : 500 Time Elapsed  67.093969357 Memory Allocations : 12250353083 
-Deltastep : 1000 Time Elapsed 66.878974602 Memory Allocations : 12312513531 
- 

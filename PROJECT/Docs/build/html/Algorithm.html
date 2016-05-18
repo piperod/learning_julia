@@ -1,0 +1,420 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Delta Stepping Algorithm &mdash; Delta Stepping Algorithm in Parallel : A beginner approach. 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="Delta Stepping Algorithm in Parallel : A beginner approach. 0.0.1 documentation" href="index.html" />
+    <link rel="next" title="Images" href="Images.html" />
+    <link rel="prev" title="Julia Parallelism" href="JuliaPar.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="delta-stepping-algorithm">
+<span id="algorithm"></span><h1>Delta Stepping Algorithm<a class="headerlink" href="#delta-stepping-algorithm" title="Permalink to this headline">¶</a></h1>
+<p>During this work I implemented on Julia  The delta stepping algorithm proppossed by [Meyer and Sanders] in 1998. This implementation split the Dijikstra algorithm  in phases so that each phase can be implemented on parallel as well I followed [Pintarelli et.all] In order to get the idea of each part of the algorithm and the propper way to implemented.</p>
+<p>The purpouse of this algorithm is to solve the so called SSSP problem (Single Source Shortest Path Problem). That can be stated as follows:</p>
+<p>Given a weighted graph G=(V,E,c) where:</p>
+<ul class="simple">
+<li>V is a Set of vertices or nodes</li>
+<li>E is a set of edges, i.e., ordered pairs of nodes</li>
+<li>c cost or weight function $c: E rightarrow mathbb{N}$,</li>
+</ul>
+<p>Find a minimal weight path from one chose node $s in V$ called the <strong>source node</strong>, to all other nodes in V. We say that the nodes $v,w in V$ are neighbours if $(v,w) in E$, i.e., if there exists and edge between them.</p>
+<div class="section" id="the-pseudocode">
+<h2>The pseudocode:<a class="headerlink" href="#the-pseudocode" title="Permalink to this headline">¶</a></h2>
+<p><img alt="Pseudo1" src="_images/algo_1.png" /></p>
+<p><img alt="Pseudo2" src="_images/algo_2.png" /></p>
+</div>
+<div class="section" id="the-implementation">
+<h2>The implementation:<a class="headerlink" href="#the-implementation" title="Permalink to this headline">¶</a></h2>
+<p>Here is the code propposed for the first algorithm:</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>    function Deltastep(list,s,delta)
+    C=Dict()
+    V=Set()
+    tent=Dict()
+    B=Dict{Any,Set}()
+    E=Set()
+    heavy=Dict()
+    light=Dict()
+    Req=[]
+    pred=Dict()
+    for item in list
+        C[item[1],item[2]]=item[3]
+        push!(V,item[1])
+        push!(V,item[2])
+        push!(E,[item[1],item[2]])
+        heavy[item[1]]=[]
+        heavy[item[2]]=[]
+        light[item[1]]=[]
+        light[item[2]]=[]
+        tent[item[1]]=10000000000000
+        tent[item[2]]=10000000000000
+        pred[item[2]]=10000000000000
+    end
+    #println(&quot;C=$C&quot;)
+    for e in E
+        v=e[1]
+        w=e[2]
+        if C[v,w]&gt;delta
+            push!(heavy[v],e)
+        else
+            push!(light[v],e)
+        end
+    end
+    #println(&quot;Heavy: $heavy&quot;)
+    #println(&quot;Light: $light&quot;)
+    #println(&quot;E=$E&quot;)
+    relax(s,0,delta,B,tent,pred,1000000000)
+    i=0
+    while isempty(B)==false
+        println(&quot;B=$B&quot;)
+        println(&quot;tent=$tent&quot;)
+        #Processing vertices from B[i]
+        if haskey(B,i)==true
+            S=Set()
+            #Relax  recursively all light edges while they stay in B[i]
+            while isempty(B[i])==false
+                #Push to Req all light      edges from      vertices in B[i]
+                Req=[]
+                for v in B[i]
+                    println(&quot;v=$v&quot;)
+                    for e in light[v]
+                        println(&quot;e  =$e&quot;)
+                        push!(Req,[e[2],tent[v]+C[e[1]      ,e[2]],v])
+                    end
+                end
+                #Update S
+                union!(S,B[i])
+                B[i]=Set()
+                #Relax all  Req edges
+                for r in Req
+                    println(&quot;r=$r&quot;)
+                    relax(r[1],r[2],delta,B,ten     t,pred,r[       3])
+                end
+            end
+            #Relax all heavy edges of vertices in S
+            Req=[]
+            delete!(B,i)
+            for v in S
+                for e in heavy[v]
+                    push!(Req,[e[2],tent[v]+C[e[1],e[2]],v  ])
+                end
+            end
+            for r in Req
+                relax(r[1],r[2],delta,B,tent,pred,r[3])
+            end
+        end
+        i=i+1
+    end
+println(&quot;This is the answer: $tent&quot;)
+return tent,pred
+    end
+</pre></div>
+</div>
+<p>The second algorithm was implemented in the following way:</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>function relax(w,d,delta,B,tent,pred,v)
+    # println(&quot;w : $w&quot;)
+    if d&lt;tent[w]
+        old_i=floor(tent[w]/delta)
+        tent[w]=d
+        if (haskey(B,old_i)==true)
+            delete!(B[old_i],w)
+        else
+            # println(&quot;Warning: In relax (w=$w,d=$d,delta=$delta), B[old_i=$old_i] not found&quot;)
+        end
+        #Add w to new bin and update its tent
+        new_i=floor(d/delta)
+        if (haskey(B,new_i)==false)
+            B[new_i]=Set()
+            # println(&quot;Warning: In relax (w=$w,d=$d,delta=$delta), allocated B[fld=$new_i].&quot;)
+        end
+        push!(B[new_i],w)
+        tent[w]=d
+        if (haskey(pred,w)==false)
+            pred[w]=()
+            pred[w]=v
+            # println(&quot;Warning: In relax (w=$w,d=$d,delta=$delta), allocated B[fld=$new_i].&quot;)
+        else
+            pred[w]=v
+        end
+        # println(&quot;The previous node visited was: $pred&quot;)
+    end
+end
+</pre></div>
+</div>
+</div>
+<div class="section" id="path-function">
+<h2>Path Function<a class="headerlink" href="#path-function" title="Permalink to this headline">¶</a></h2>
+<p>Some other functions were implemented. The following one, was implemented to retrieve the Path</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>function path(pred,w)
+  v=w
+  path = []
+  while v&lt;1000000000
+        push!(path,v)
+        #println(&quot;$path&quot;)
+        v = pred[v]
+  end
+  return reverse(path)
+end
+</pre></div>
+</div>
+</div>
+<div class="section" id="example">
+<h2>Example:<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
+<p>The following is an example of how to use the algorithm.</p>
+<p>Let us start by setting up the graph. To do so let us define the following array:</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>graph=Array{Int64}[]
+push!(graph,[1,2,1])
+push!(graph,[2,3,1])
+push!(graph,[3,1,4])
+push!(graph,[3,4,2])
+push!(graph,[4,2,5])
+</pre></div>
+</div>
+<p><img alt="graph" src="_images/graph.gif" /></p>
+<p>Now we have a directed graph. Let us say we want to know the shortest path to each node from the vertice 2, we will do something like:</p>
+<div class="code bash highlight-python"><div class="highlight"><pre><span class="n">include</span><span class="p">(</span><span class="s">&quot;deltastep.jl&quot;</span><span class="p">)</span>
+<span class="n">include</span><span class="p">(</span><span class="s">&quot;relax.jl&quot;</span><span class="p">)</span>
+<span class="p">(</span><span class="n">tent</span><span class="p">,</span><span class="n">pred</span><span class="p">)</span><span class="o">=</span><span class="n">Deltastep</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This is a simple code that runs over the graph, starting from the node 2 and with a delta of 1.</p>
+<p><img alt="deltastep" src="_images/deltastep.gif" /></p>
+<p>As is shown. It is obvious that going from node 2 to 2 has to have cost 0. The other nodes can be extracted very easy too.</p>
+<div class="section" id="parallel-delta-stepping">
+<h3>Parallel Delta-Stepping<a class="headerlink" href="#parallel-delta-stepping" title="Permalink to this headline">¶</a></h3>
+<p>The implementation provided for the Delta stepping algorithm is the following:</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>function Deltastep(list,s,delta)
+    @everywhere rdc(d::Vector,i::Vector) = rdc(rdc(Dict(),d),i)
+    @everywhere rdc(d::Dict,i::Vector) = begin d[i[1]] = []; d[i[2]] = [];d end
+    @everywhere rdc(d::Dict,i::Dict) = merge!(d,i)
+    @everywhere rdt(d::Vector,i::Vector) = rdt(rdt(Dict(),d),i)
+    @everywhere rdt(d::Dict,i::Vector) = begin d[i[1]] = 1000000000000000;d[i[2]] = 1000000000000000; d end
+    @everywhere rdt(d::Dict,i::Dict) = merge!(d,i)
+    @everywhere rdcc(d::Vector,i::Vector) = rdcc(rdcc(Dict(),d),i)
+    @everywhere rdcc(d::Dict,i::Vector) = begin d[i[1],i[2]] = i[3]; d end
+    @everywhere rdcc(d::Dict,i::Dict) = merge!(d,i)
+    @everywhere rds(d::Vector,i::Vector) = rds(rds(Set(),d),i)
+    @everywhere rds(d::Set,i::Vector) = begin push!(d,i[1]);push!(d,i[2]); d end
+    @everywhere rds(d::Set,i::Set) = union!(d,i)
+    @everywhere rde(d::Vector,i::Vector) = rde(rde(Set(),d),i)
+    @everywhere rde(d::Set,i::Vector) = begin push!(d,[i[1],i[2]]); d end
+    @everywhere rde(d::Set,i::Set) = union!(d,i)
+    heavy = @parallel (rdc) for item in list
+      item;
+    end
+    light=@parallel (rdc) for item in list
+        item;
+    end
+    tent= @parallel (rdt) for item in list
+        item;
+    end
+    pred= @parallel (rdt) for item in list
+        item;
+    end
+    C = @parallel (rdcc) for item in list
+        item
+    end
+    V = @parallel (rds) for item in list
+    item
+    end
+    E= @parallel (rde) for item in list
+        item
+    end
+    B=Dict{Any,Set}()
+    Req=[]
+    # println(&quot;Heavy: $heavy &quot;)
+    # println(&quot;C=$C&quot;)
+    for e in E
+        v=e[1]
+        w=e[2]
+        if C[v,w]&gt;delta
+            push!(heavy[v],e)
+        else
+            push!(light[v],e)
+        end
+    end
+    # println(&quot;Light: $light  &quot;)
+    # println(&quot;E=$E&quot;)
+    relax(s,0,delta,B,tent,pred,1000000000)
+    i=0
+    while isempty(B)==false
+        # println(&quot;B=$B&quot;)
+        # println(&quot;tent=$tent&quot;)
+        # Processing vertices from B[i]
+        if haskey(B,i)==true
+            S=Set()
+            # Relax recursively all light edges while they stay in B[i]
+            while isempty(B[i])==false
+                # Push to Req all light edges from vertices in B[i]
+                Req=[]
+                for v in B[i]
+                    # println(&quot;v=$v&quot;)
+                    for e in light[v]
+                        # println(&quot;e=$e&quot;)
+                        push!(Req,[e[2],tent[v]+C[e[1],e[2]],v])
+                    end
+                end
+                # Update S
+                union!(S,B[i])
+                B[i]=Set()
+                # Relax all Req edges
+                for r in Req
+                    # println(&quot;r=$r&quot;)
+                    relax(r[1],r[2],delta,B,tent,pred,r[3])
+                end
+            end
+            # Relax all heavy edges of vertices in S
+            Req=[]
+            delete!(B,i)
+            for v in S
+                for e in heavy[v]
+                    push!(Req,[e[2],tent[v]+C[e[1],e[2]],v])
+                end
+            end
+            for r in Req
+                relax(r[1],r[2],delta,B,tent,pred,r[3])
+            end
+        end
+
+        i=i+1
+    end
+    println(&quot;This is the answer: $tent&quot;)
+    return tent,pred
+end
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="some-considerations">
+<h2>Some considerations<a class="headerlink" href="#some-considerations" title="Permalink to this headline">¶</a></h2>
+<p>One of the problems I found when trying to implement the algorithm in parallel, was the possibility to implement Shared memory data types for different structures like dictionaries, sets and others.</p>
+<p>One of the solutions the community provided me when I asked on Stackoverflow was to create a set everywhere, populate it and in the end merge it. Doing this was helpful, however inefficient for memory allocations.</p>
+<p>Let us see an example that clarifies this concept: We want to create a dictionary of sets. We want to set every vertex of the graph as a key and initialize it in parallel.</p>
+<p>The first idea was simply to initialize a dictionary and then using <cite>&#64;parallel</cite>
+populate it. Something like this:</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>julia&gt; C=Dict()
+julia&gt; @parallel for item in a
+                C[item[1],item[2]]=item[3]
+           end
+julia&gt; println(&quot;$C&quot;)
+</pre></div>
+</div>
+<p>This was the result:</p>
+<p><img alt="dict" src="_images/dict.gif" /></p>
+<p>Again we face the problem of overwriting, from the race conditions. For this reason was necessary to implement the following way:</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>julia&gt; @everywhere rdc(d::Dict,i::Vector)= begin d[i[1]] = length(a); d end
+julia&gt; @everywhere rdc(d::Vector,i::Vector) = rdc(rdc(Dict(),d),i)
+julia&gt; @everywhere rdc(d::Dict,i::Dict) = merge!(d,i)
+julia&gt; C = @parallel (rdc) for item in a
+                item
+            end
+julia&gt; println(&quot;$C&quot;)
+</pre></div>
+</div>
+<p>Implementing this way lead me to this desired result:</p>
+<p><img alt="paradict" src="_images/paradict.gif" /></p>
+<p>Several solutions like this one were useful to parallel implementation.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Delta Stepping Algorithm</a><ul>
+<li><a class="reference internal" href="#the-pseudocode">The pseudocode:</a></li>
+<li><a class="reference internal" href="#the-implementation">The implementation:</a></li>
+<li><a class="reference internal" href="#path-function">Path Function</a></li>
+<li><a class="reference internal" href="#example">Example:</a><ul>
+<li><a class="reference internal" href="#parallel-delta-stepping">Parallel Delta-Stepping</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#some-considerations">Some considerations</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="JuliaPar.html" title="previous chapter">Julia Parallelism</a></li>
+      <li>Next: <a href="Images.html" title="next chapter">Images</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/Algorithm.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Ivan Felipe Rodriguez Rodriguez.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
+      
+      |
+      <a href="_sources/Algorithm.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

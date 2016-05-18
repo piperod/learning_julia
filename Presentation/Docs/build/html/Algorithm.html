@@ -52,8 +52,8 @@
 <p>Find a minimal weight path from one chose node $s in V$ called the <strong>source node</strong>, to all other nodes in V. We say that the nodes $v,w in V$ are neighbours if $(v,w) in E$, i.e., if there exists and edge between them.</p>
 <div class="section" id="the-pseudocode">
 <h2>The pseudocode:<a class="headerlink" href="#the-pseudocode" title="Permalink to this headline">¶</a></h2>
-<p><img alt="Pseudo1" src="_images/algo_1.png" /></p>
-<p><img alt="Pseudo2" src="_images/algo_2.png" /></p>
+<p><img alt="Pseudo1" src="../../Imagenes/algo_1.png" /></p>
+<p><img alt="Pseudo2" src="../../Imagenes/algo_2.png" /></p>
 </div>
 <div class="section" id="the-implementation">
 <h2>The implementation:<a class="headerlink" href="#the-implementation" title="Permalink to this headline">¶</a></h2>
@@ -201,7 +201,7 @@ push!(graph,[3,4,2])
 push!(graph,[4,2,5])
 </pre></div>
 </div>
-<p><img alt="graph" src="_images/graph.gif" /></p>
+<p><img alt="graph" src="../../Imagenes/graph.gif" /></p>
 <p>Now we have a directed graph. Let us say we want to know the shortest path to each node from the vertice 2, we will do something like:</p>
 <div class="code bash highlight-python"><div class="highlight"><pre><span class="n">include</span><span class="p">(</span><span class="s">&quot;deltastep.jl&quot;</span><span class="p">)</span>
 <span class="n">include</span><span class="p">(</span><span class="s">&quot;relax.jl&quot;</span><span class="p">)</span>
@@ -209,7 +209,7 @@ push!(graph,[4,2,5])
 </pre></div>
 </div>
 <p>This is a simple code that runs over the graph, starting from the node 2 and with a delta of 1.</p>
-<p><img alt="deltastep" src="_images/deltastep.gif" /></p>
+<p><img alt="deltastep" src="../../Imagenes/deltastep.gif" /></p>
 <p>As is shown. It is obvious that going from node 2 to 2 has to have cost 0. The other nodes can be extracted very easy too.</p>
 <div class="section" id="parallel-delta-stepping">
 <h3>Parallel Delta-Stepping<a class="headerlink" href="#parallel-delta-stepping" title="Permalink to this headline">¶</a></h3>
@@ -331,7 +331,7 @@ julia&gt; println(&quot;$C&quot;)
 </pre></div>
 </div>
 <p>This was the result:</p>
-<p><img alt="dict" src="_images/dict.gif" /></p>
+<p><img alt="dict" src="../../Imagenes/dict.gif" /></p>
 <p>Again we face the problem of overwriting, from the race conditions. For this reason was necessary to implement the following way:</p>
 <div class="code bash highlight-python"><div class="highlight"><pre>julia&gt; @everywhere rdc(d::Dict,i::Vector)= begin d[i[1]] = length(a); d end
 julia&gt; @everywhere rdc(d::Vector,i::Vector) = rdc(rdc(Dict(),d),i)
@@ -343,7 +343,7 @@ julia&gt; println(&quot;$C&quot;)
 </pre></div>
 </div>
 <p>Implementing this way lead me to this desired result:</p>
-<p><img alt="paradict" src="_images/paradict.gif" /></p>
+<p><img alt="paradict" src="../../Imagenes/paradict.gif" /></p>
 <p>Several solutions like this one were useful to parallel implementation.</p>
 </div>
 </div>

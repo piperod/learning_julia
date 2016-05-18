@@ -1,0 +1,139 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Introduction &mdash; Delta Stepping Algorithm in Parallel : A beginner approach. 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="Delta Stepping Algorithm in Parallel : A beginner approach. 0.0.1 documentation" href="index.html" />
+    <link rel="next" title="Julia Parallelism" href="JuliaPar.html" />
+    <link rel="prev" title="Welcome to Delta Stepping Algorithm in Julia : A beginner approach.’s Documentation" href="index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="introduction">
+<span id="id1"></span><h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
+<p>Julia language is a high-level, high-performance dynamic programming language for technical computing. Between several other features  it provides a sophisticated compiler and distributed parallel execution, that allows the user to code sophisticated applications. Given the novelty of the language, is hard to find documentation that help the beginners and new learners to understand the core concepts and advantages of using Julia. For this reason, and mostly as a new learner, I provide this work that show by example some usages and advantages of using <a class="reference external" href="julialang.com/docs">Julia</a> .</p>
+<p>The example I will be refering to is the Delta-stepping algorithm. Which is a clever proposition developed by  Madduri et. all. In their paper Parallel Shortest Path Algorihtm for Solving Large Scale Instances; along with the one by M. Kranjcevic $Delta$-Stepping Algorithm for Shared Memories Architectures.</p>
+<p>This algorithm will be specially used  to find the contour of an image. Using the package <a class="reference external" href="https://github.com/timholy/Images.jl">Images</a> I converted the image to gray scale and calculate the gradient to compute a function cost. Later I  set a directed graph where the pixels where the nodes and the cost to go to a neighbor pixel with different color was high, then using the delta-stepping algorithm I can find the shortest path, which was also the contour.</p>
+<p>A parallel implementation in Julia of this algorithm is propposed. For this implementation I ran several test to evaluate it&#8217;s performance. In particular three images were selected.</p>
+<p>There are many changes that still have to be done. In the next version, I will be updating the implementation changing the buckets from a dictionary of sets(not very efficient) to a shared list (to provide better parallelism). As well I will be working on the tutorials so that clear and nicer examples can be shown.</p>
+<p>Note: All the information  provided here is based on the Official Documentation of Julia, any other source will be cited explicitely.</p>
+<div class="section" id="a-little-bit-of-julia">
+<h2>A Little Bit of Julia.<a class="headerlink" href="#a-little-bit-of-julia" title="Permalink to this headline">¶</a></h2>
+<p>Instalation might be very tricky. However for learning I suggest you to download the binary extension that can be found <a class="reference external" href="http://julialang.org/downloads/">Here</a></p>
+<p>When you have it go to the folder <cite>julia/bin</cite> and simply execute <cite>Julia</cite>. Like:</p>
+<div class="code bash highlight-python"><div class="highlight"><pre><span class="n">julia</span>
+</pre></div>
+</div>
+<p><img alt="first" src="_images/start.gif" /></p>
+<p>This initialization would start julia by default with one process. If you want to start with more processes you need to specify it with the following command (It makes sense when -p # correlates with the number of processors on your machine). For example on mine two cores.</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>julia -p 2
+</pre></div>
+</div>
+<p><img alt="startp" src="_images/startp2.gif" /></p>
+<p>In case you forget to start with this command, you can add more procs from the julia command line:</p>
+<div class="code bash highlight-python"><div class="highlight"><pre><span class="n">addprocs</span><span class="p">()</span>
+</pre></div>
+</div>
+<p><img alt="addprocs" src="_images/addprocs().gif" /></p>
+<p>Which will add all the available processors by default, but you can specify too just puting inside the parenthesis as many process as cores has your machine.</p>
+<p>You can get at any momment the number of available workers by running the following code:</p>
+<div class="code bash highlight-python"><div class="highlight"><pre><span class="n">nprocs</span><span class="p">()</span>
+</pre></div>
+</div>
+<p><img alt="nprocs" src="_images/nprocs.gif" /></p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Introduction</a><ul>
+<li><a class="reference internal" href="#a-little-bit-of-julia">A Little Bit of Julia.</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Welcome to Delta Stepping Algorithm in Julia : A beginner approach.&#8217;s Documentation</a></li>
+      <li>Next: <a href="JuliaPar.html" title="next chapter">Julia Parallelism</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/Introduction.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Ivan Felipe Rodriguez Rodriguez.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
+      
+      |
+      <a href="_sources/Introduction.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

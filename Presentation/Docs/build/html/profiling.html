@@ -86,9 +86,9 @@ close(f)
 <div class="section" id="results">
 <h1>Results<a class="headerlink" href="#results" title="Permalink to this headline">¶</a></h1>
 <p>Running the profiling tools on the super computer Stampede I obtained the following results:</p>
-<p><img alt="experiment" src="_images/experiment.png" /></p>
+<p><img alt="experiment" src="../../Imagenes/experiment.png" /></p>
 <p>The parallel performance increased significatively. Even getting to a speed up of 2.9 which was closer to a linear performance.</p>
-<p><img alt="allocations" src="_images/allocations.png" /></p>
+<p><img alt="allocations" src="../../Imagenes/allocations.png" /></p>
 <p>The results of the memory were kind of high in parallel. This is due to the used of the memory when I am creating the arrays in every node, and then merging the branches into the principal one.</p>
 <p>Since julia is still on development (but now is reaching 0.5 dev version) is not available yet on Stampede. I use the binaries available to run it on stampede. But I could not run it with more than 3 process. Everytime I try to run it with more cores I got &#8220;Could not allocate pools&#8221;.</p>
 </div>
